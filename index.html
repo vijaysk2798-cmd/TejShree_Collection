@@ -1,3 +1,869 @@
+Skip to content
+Chat history
+
+
+
+You said:
+can you build me one compact web Application for resale saare 
+ChatGPT said:
+
+Thought for 23s
+Nice idea! Let’s build a compact single-page web app for resale sarees that you can directly host (Netlify/GitHub Pages/any static hosting).
+
+Below is a complete, ready-to-use index.html file:
+
+Mobile responsive
+
+Product listing grid
+
+Filters (fabric, price, condition)
+
+WhatsApp “Buy now” contact
+
+“Sell your saree” form (for leads – backend can be added later)
+
+1. Full Compact Web App (Single HTML File)
+Save this as index.html and open in browser:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Resale Saree Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --primary: #b6204d;
+      --primary-soft: #ffe6ef;
+      --bg: #faf5f7;
+      --text: #333;
+      --card-bg: #fff;
+      --border: #e4d4da;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --shadow-soft: 0 8px 18px rgba(0,0,0,0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .app-shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 12px 16px 32px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 18px;
+      margin-bottom: 16px;
+      background: var(--card-bg);
+      border-radius: 999px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border);
+      position: sticky;
+      top: 8px;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+
+    header .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-round {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffeef4, #b6204d);
+    }
+
+    header h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    header span.tagline {
+      font-size: 0.75rem;
+      color: #777;
+    }
+
+    header .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f5f2f3;
+      color: var(--text);
+      transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 10px rgba(182, 32, 77, 0.35);
+    }
+
+    .btn-outline {
+      border-color: var(--border);
+      background: #fff;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 0.7rem;
+      color: #555;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 850px) {
+      header {
+        flex-wrap: wrap;
+        border-radius: 18px;
+        align-items: flex-start;
+      }
+      main {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    /* Left: products + filters */
+    .products-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, var(--primary-soft), #fff);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .hero-copy {
+      max-width: 420px;
+    }
+
+    .hero-copy h2 {
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+    }
+
+    .hero-copy p {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .stats {
+      font-size: 0.75rem;
+      color: #555;
+    }
+
+    .filters-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      align-items: flex-end;
+    }
+
+    .filters-card h3 {
+      font-size: 0.9rem;
+      flex-basis: 100%;
+      margin-bottom: 2px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 120px;
+    }
+
+    .field label {
+      font-size: 0.75rem;
+      color: #666;
+    }
+
+    .field select,
+    .field input {
+      padding: 6px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+      background: #fff;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(182, 32, 77, 0.2);
+    }
+
+    .products-grid {
+      margin-top: 4px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.04);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.07);
+    }
+
+    .card-img {
+      position: relative;
+      padding-top: 70%;
+      background: radial-gradient(circle at 30% 20%, #ffeef5, #f0d0dd);
+    }
+
+    .card-img span.badge {
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      background: rgba(255,255,255,0.9);
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      border: 1px solid var(--border);
+    }
+
+    .card-body {
+      padding: 8px 10px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .card-meta {
+      font-size: 0.75rem;
+      color: #666;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .card-price-row {
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .price {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--primary);
+    }
+
+    .price small {
+      font-weight: 400;
+      font-size: 0.7rem;
+      color: #777;
+    }
+
+    .card-tags {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .card-tag {
+      font-size: 0.65rem;
+      padding: 3px 6px;
+      border-radius: 999px;
+      background: #f6f1f3;
+      color: #6c4854;
+    }
+
+    .empty-state {
+      font-size: 0.85rem;
+      color: #777;
+      padding: 8px;
+    }
+
+    /* Right side: Sell form + quick info */
+    .side-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .panel-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .panel-card h3 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .panel-card p {
+      font-size: 0.8rem;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .sell-form .field {
+      margin-bottom: 8px;
+    }
+
+    .sell-form input,
+    .sell-form select,
+    .sell-form textarea {
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 6px 8px;
+      font-size: 0.8rem;
+      resize: vertical;
+      outline: none;
+      width: 100%;
+      background: #fff;
+    }
+
+    .sell-form input:focus,
+    .sell-form select:focus,
+    .sell-form textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(182, 32, 77, 0.2);
+    }
+
+    .hint {
+      font-size: 0.7rem;
+      color: #888;
+    }
+
+    .steps-list {
+      list-style: none;
+      padding-left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 0.78rem;
+      color: #555;
+    }
+
+    .steps-list li::before {
+      content: "•";
+      color: var(--primary);
+      display: inline-block;
+      width: 12px;
+      margin-left: -2px;
+    }
+
+    footer {
+      margin-top: 20px;
+      font-size: 0.75rem;
+      text-align: center;
+      color: #999;
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header>
+      <div class="logo-area">
+        <div class="logo-round"></div>
+        <div>
+          <h1>Saare ReSale</h1>
+          <span class="tagline">Pre-loved sarees, new stories ✨</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <span class="pill">Free listing • No commission</span>
+        <button class="btn btn-outline" id="scrollToSellBtn">Sell your saree</button>
+        <button class="btn btn-primary" id="scrollToShopBtn">Browse collection</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- LEFT: PRODUCTS -->
+      <section class="products-panel">
+        <div class="hero-card">
+          <div class="hero-copy">
+            <h2>Give your sarees a second life</h2>
+            <p>List your gently used sarees and connect with buyers who love unique pieces at honest prices.</p>
+            <div class="hero-meta">
+              <span class="stats">⭐ Handpicked, pre-loved sarees</span>
+              <span class="stats">🧺 Pure silk, cotton, designer &amp; more</span>
+            </div>
+          </div>
+          <div>
+            <button class="btn btn-primary" id="sellNowBtn">List a saree</button>
+          </div>
+        </div>
+
+        <!-- FILTERS -->
+        <section class="filters-card" id="shop">
+          <h3>Filter sarees</h3>
+          <div class="field">
+            <label for="fabricFilter">Fabric</label>
+            <select id="fabricFilter">
+              <option value="">All fabrics</option>
+              <option value="Silk">Silk</option>
+              <option value="Cotton">Cotton</option>
+              <option value="Linen">Linen</option>
+              <option value="Georgette">Georgette</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="conditionFilter">Condition</label>
+            <select id="conditionFilter">
+              <option value="">Any</option>
+              <option value="Like New">Like New</option>
+              <option value="Gently Used">Gently Used</option>
+              <option value="Vintage">Vintage</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="maxPriceFilter">Max Price (₹)</label>
+            <input type="number" id="maxPriceFilter" placeholder="e.g. 2500" min="0" />
+          </div>
+          <button class="btn" id="clearFiltersBtn">Clear</button>
+        </section>
+
+        <!-- PRODUCTS GRID -->
+        <section class="products-grid" id="productsGrid">
+          <!-- Cards inserted by JS -->
+        </section>
+        <div class="empty-state" id="emptyState" style="display:none;">
+          No sarees match these filters. Try changing fabric, condition or price.
+        </div>
+      </section>
+
+      <!-- RIGHT: SELL FORM / INFO -->
+      <aside class="side-panel">
+        <section class="panel-card" id="sellSection">
+          <h3>Sell your saree</h3>
+          <p>Share details below. You’ll get buyer enquiries directly on WhatsApp / phone.</p>
+
+          <form class="sell-form" id="sellForm">
+            <div class="field">
+              <label>Your name</label>
+              <input type="text" id="sellerName" placeholder="E.g. Priya" required />
+            </div>
+            <div class="field">
+              <label>WhatsApp number</label>
+              <input type="tel" id="sellerPhone" placeholder="10 digit number" required />
+              <span class="hint">We’ll show this only to interested buyers.</span>
+            </div>
+            <div class="field">
+              <label>Saree title</label>
+              <input type="text" id="sareeTitle" placeholder="E.g. Red Kanchivaram silk" required />
+            </div>
+            <div class="field">
+              <label>Approx. price (₹)</label>
+              <input type="number" id="sareePrice" min="0" placeholder="₹" required />
+            </div>
+            <div class="field">
+              <label>Fabric</label>
+              <select id="sareeFabric" required>
+                <option value="">Select</option>
+                <option value="Silk">Silk</option>
+                <option value="Cotton">Cotton</option>
+                <option value="Linen">Linen</option>
+                <option value="Georgette">Georgette</option>
+                <option value="Other">Other / Mix</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Condition</label>
+              <select id="sareeCondition" required>
+                <option value="">Select</option>
+                <option value="Like New">Like New</option>
+                <option value="Gently Used">Gently Used</option>
+                <option value="Vintage">Vintage</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Details</label>
+              <textarea id="sareeDetails" rows="3" placeholder="Occasion worn, blouse status, fall & pico, any damage…"></textarea>
+            </div>
+            <div class="field">
+              <label>Photos (for your reference)</label>
+              <input type="file" id="sareePhotos" accept="image/*" multiple />
+              <span class="hint">In this demo, photos are not uploaded. You can WhatsApp them to buyers.</span>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Generate WhatsApp message</button>
+          </form>
+
+          <p class="hint" style="margin-top:6px;">
+            This is a front-end only demo. For a live site, you can connect this form to your own backend / Google Sheet / Firebase later.
+          </p>
+        </section>
+
+        <section class="panel-card">
+          <h3>How it works</h3>
+          <ul class="steps-list">
+            <li>Fill the “Sell your saree” form with all details.</li>
+            <li>Send the auto-generated WhatsApp message to the admin number / group.</li>
+            <li>Admin verifies and lists your saree in the store.</li>
+            <li>Interested buyers contact you directly via WhatsApp.</li>
+          </ul>
+        </section>
+      </aside>
+    </main>
+
+    <footer>
+      © <span id="yearSpan"></span> Saare ReSale • Built as a compact resale saree web app.  
+      Customize by editing <code>index.html</code>.
+    </footer>
+  </div>
+
+  <script>
+    // --- DEMO DATA: Sample sarees ---
+    const sarees = [
+      {
+        id: 1,
+        title: "Maroon Kanchivaram Silk Saree",
+        fabric: "Silk",
+        condition: "Like New",
+        price: 5200,
+        city: "Chennai",
+        blouse: "Unstitched",
+        tagLine: "Wedding / reception perfect",
+        whatsapp: "919876543210"
+      },
+      {
+        id: 2,
+        title: "Peach Soft Silk with Silver Zari",
+        fabric: "Silk",
+        condition: "Gently Used",
+        price: 3200,
+        city: "Bangalore",
+        blouse: "Stitched 36",
+        tagLine: "One-time worn",
+        whatsapp: "919812345678"
+      },
+      {
+        id: 3,
+        title: "Handloom Cotton Saree – Indigo",
+        fabric: "Cotton",
+        condition: "Gently Used",
+        price: 1600,
+        city: "Coimbatore",
+        blouse: "No blouse",
+        tagLine: "Office / daily wear",
+        whatsapp: "919900112233"
+      },
+      {
+        id: 4,
+        title: "Linen Floral Printed Saree",
+        fabric: "Linen",
+        condition: "Like New",
+        price: 2100,
+        city: "Hyderabad",
+        blouse: "Running blouse",
+        tagLine: "Brunch / casual outings",
+        whatsapp: "919944556677"
+      },
+      {
+        id: 5,
+        title: "Green Georgette Partywear Saree",
+        fabric: "Georgette",
+        condition: "Vintage",
+        price: 1200,
+        city: "Pune",
+        blouse: "Stitched 38",
+        tagLine: "Lightweight & flowy",
+        whatsapp: "919855667788"
+      }
+    ];
+
+    const productsGrid = document.getElementById("productsGrid");
+    const emptyState = document.getElementById("emptyState");
+
+    const fabricFilter = document.getElementById("fabricFilter");
+    const conditionFilter = document.getElementById("conditionFilter");
+    const maxPriceFilter = document.getElementById("maxPriceFilter");
+    const clearFiltersBtn = document.getElementById("clearFiltersBtn");
+
+    function renderSarees(list) {
+      productsGrid.innerHTML = "";
+
+      if (!list.length) {
+        emptyState.style.display = "block";
+        return;
+      }
+      emptyState.style.display = "none";
+
+      list.forEach((s) => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="card-img">
+            <span class="badge">${s.condition}</span>
+          </div>
+          <div class="card-body">
+            <div class="card-title">${s.title}</div>
+            <div class="card-meta">
+              <span>${s.fabric}</span>
+              <span>Blouse: ${s.blouse}</span>
+              <span>${s.city}</span>
+            </div>
+            <div class="card-tags">
+              <span class="card-tag">${s.tagLine}</span>
+            </div>
+            <div class="card-price-row">
+              <div class="price">₹${s.price.toLocaleString("en-IN")} <small>+ shipping</small></div>
+              <button class="btn btn-outline btn-sm" data-id="${s.id}">WhatsApp</button>
+            </div>
+          </div>
+        `;
+        productsGrid.appendChild(card);
+      });
+
+      // Attach WhatsApp click handlers
+      document.querySelectorAll(".card button[data-id]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = parseInt(btn.getAttribute("data-id"), 10);
+          const saree = sarees.find((x) => x.id === id);
+          if (!saree) return;
+          const msg =
+            `Hi, I'm interested in this saree:\n\n` +
+            `*${saree.title}*\n` +
+            `Fabric: ${saree.fabric}\n` +
+            `Condition: ${saree.condition}\n` +
+            `Price: ₹${saree.price.toLocaleString("en-IN")}\n` +
+            `City: ${saree.city}\n\n` +
+            `Is it still available?`;
+          const encoded = encodeURIComponent(msg);
+          const url = `https://wa.me/${saree.whatsapp}?text=${encoded}`;
+          window.open(url, "_blank");
+        });
+      });
+    }
+
+    function applyFilters() {
+      const fabricVal = fabricFilter.value;
+      const conditionVal = conditionFilter.value;
+      const maxPriceVal = maxPriceFilter.value ? Number(maxPriceFilter.value) : null;
+
+      const filtered = sarees.filter((s) => {
+        if (fabricVal && s.fabric !== fabricVal) return false;
+        if (conditionVal && s.condition !== conditionVal) return false;
+        if (maxPriceVal !== null && s.price > maxPriceVal) return false;
+        return true;
+      });
+
+      renderSarees(filtered);
+    }
+
+    fabricFilter.addEventListener("change", applyFilters);
+    conditionFilter.addEventListener("change", applyFilters);
+    maxPriceFilter.addEventListener("input", applyFilters);
+    clearFiltersBtn.addEventListener("click", () => {
+      fabricFilter.value = "";
+      conditionFilter.value = "";
+      maxPriceFilter.value = "";
+      applyFilters();
+    });
+
+    // Sell form -> generate WhatsApp message
+    const sellForm = document.getElementById("sellForm");
+    sellForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("sellerName").value.trim();
+      const phone = document.getElementById("sellerPhone").value.trim();
+      const title = document.getElementById("sareeTitle").value.trim();
+      const price = document.getElementById("sareePrice").value.trim();
+      const fabric = document.getElementById("sareeFabric").value;
+      const condition = document.getElementById("sareeCondition").value;
+      const details = document.getElementById("sareeDetails").value.trim();
+
+      // Admin number where you want sellers to send listing
+      const ADMIN_WHATSAPP = "919999999999"; // TODO: change to your number
+
+      const msg =
+        `New saree listing request:\n\n` +
+        `Seller: ${name}\n` +
+        `Phone: ${phone}\n\n` +
+        `Title: ${title}\n` +
+        `Price: ₹${price}\n` +
+        `Fabric: ${fabric}\n` +
+        `Condition: ${condition}\n\n` +
+        (details ? `Details: ${details}\n\n` : "") +
+        `Photos: Seller will share on WhatsApp.\n\n` +
+        `Please review and list on the store.`;
+
+      const url = `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(msg)}`;
+      window.open(url, "_blank");
+    });
+
+    // Smooth scroll buttons
+    function scrollToElement(el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    document.getElementById("scrollToSellBtn").addEventListener("click", () => {
+      scrollToElement(document.getElementById("sellSection"));
+    });
+
+    document.getElementById("sellNowBtn").addEventListener("click", () => {
+      scrollToElement(document.getElementById("sellSection"));
+    });
+
+    document.getElementById("scrollToShopBtn").addEventListener("click", () => {
+      scrollToElement(document.getElementById("shop"));
+    });
+
+    // Init
+    renderSarees(sarees);
+    document.getElementById("yearSpan").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+2. How you can customize it for your resale business
+You can quickly adapt this:
+
+Change Branding
+
+Edit Saare ReSale, tagline, and footer text.
+
+Change colors in the :root section (primary, background, etc.).
+
+Add Your Real Data
+
+In the sarees array (inside <script>), replace demo sarees with your real stock, including:
+
+title, fabric, condition, price, city, blouse, tagLine, whatsapp.
+
+Admin WhatsApp Number
+
+In the script, set ADMIN_WHATSAPP to your real WhatsApp number so seller requests come to you.
+
+Deploy
+
+Just upload this index.html to:
+
+Netlify, Vercel, GitHub Pages, or any simple hosting.
+
+No backend is required initially.
+
+If you tell me:
+
+your brand name,
+
+main cities/fabrics you focus on,
+
+your WhatsApp number,
+
+I can tweak this file exactly for your business (colors, logo text, default sample items).
+
+You said:
+your brand name: Tej shree collection  your WhatsApp number : 9884191310
+ChatGPT said:
+Here’s your customized Tej Shree Collection resale saree web app with your WhatsApp number wired in.
+
+Brand name: Tej Shree Collection
+
+WhatsApp: 9884191310 (used as 919884191310 in links)
+
+Just save this as index.html and open in browser.
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -777,6 +1643,3447 @@
     document.getElementById("sellNowBtn").addEventListener("click", () => {
       scrollToElement(document.getElementById("sellSection"));
     });
+
+    document.getElementById("scrollToShopBtn").addEventListener("click", () => {
+      scrollToElement(document.getElementById("shop"));
+    });
+
+    // Init
+    renderSarees(sarees);
+    document.getElementById("yearSpan").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+If you want, next step I can:
+
+Add your logo (PNG/JPEG) on top,
+
+Or convert this into a React app / Zip structure so you can just import into VS Code.
+
+You said:
+need login two ways login one is admin .can upload sare pic with pice  and second one direct access with out login .
+ChatGPT said:
+
+Thought for 17s
+Nice, let’s turn Tej Shree Collection into:
+
+Guest mode – browse sarees directly (no login).
+
+Admin login – simple password-based login; admin can upload saree photo + price and it appears in the listing (saved in browser localStorage).
+
+Below is a full updated index.html with:
+
+Mode selection screen (Guest / Admin).
+
+Admin login (password only, no backend).
+
+Admin form to add sarees with image upload.
+
+Guest users just see the catalogue + filters.
+
+🔐 Default admin password in this demo: TSADMIN123
+You can change it in the script: const ADMIN_PASSWORD = "TSADMIN123";
+
+Updated index.html (copy–paste and replace old file)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tej Shree Collection – Resale Sarees</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --primary: #b6204d;
+      --primary-soft: #ffe6ef;
+      --bg: #faf5f7;
+      --text: #333;
+      --card-bg: #fff;
+      --border: #e4d4da;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --shadow-soft: 0 8px 18px rgba(0,0,0,0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .app-shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 12px 16px 32px;
+    }
+
+    /* AUTH / MODE CHOOSER */
+    #authScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .auth-card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border);
+      max-width: 420px;
+      width: 100%;
+      padding: 18px 18px 16px;
+    }
+
+    .auth-card h1 {
+      font-size: 1.3rem;
+      margin-bottom: 4px;
+    }
+
+    .auth-card p {
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .auth-section {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .auth-label {
+      font-size: 0.8rem;
+      color: #666;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+      outline: none;
+      margin-bottom: 8px;
+      background: #fff;
+    }
+
+    .auth-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(182, 32, 77, 0.2);
+    }
+
+    .auth-hint {
+      font-size: 0.75rem;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    .mode-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f5f2f3;
+      color: var(--text);
+      transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.1s ease;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 10px rgba(182, 32, 77, 0.35);
+    }
+
+    .btn-outline {
+      border-color: var(--border);
+      background: #fff;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 0.7rem;
+      color: #555;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 18px;
+      margin-bottom: 16px;
+      background: var(--card-bg);
+      border-radius: 999px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border);
+      position: sticky;
+      top: 8px;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+
+    header .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-round {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffeef4, #b6204d);
+    }
+
+    header h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    header span.tagline {
+      font-size: 0.75rem;
+      color: #777;
+    }
+
+    header .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .admin-badge {
+      font-size: 0.75rem;
+      color: #fff;
+      background: #2f855a;
+      border-radius: 999px;
+      padding: 3px 10px;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 850px) {
+      header {
+        flex-wrap: wrap;
+        border-radius: 18px;
+        align-items: flex-start;
+      }
+      main {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .products-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, var(--primary-soft), #fff);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .hero-copy {
+      max-width: 420px;
+    }
+
+    .hero-copy h2 {
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+    }
+
+    .hero-copy p {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .stats {
+      font-size: 0.75rem;
+      color: #555;
+    }
+
+    .filters-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      align-items: flex-end;
+    }
+
+    .filters-card h3 {
+      font-size: 0.9rem;
+      flex-basis: 100%;
+      margin-bottom: 2px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 120px;
+      font-size: 0.8rem;
+    }
+
+    .field label {
+      font-size: 0.75rem;
+      color: #666;
+    }
+
+    .field select,
+    .field input {
+      padding: 6px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+      background: #fff;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(182, 32, 77, 0.2);
+    }
+
+    .products-grid {
+      margin-top: 4px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.04);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.07);
+    }
+
+    .card-img {
+      position: relative;
+      padding-top: 70%;
+      background: radial-gradient(circle at 30% 20%, #ffeef5, #f0d0dd);
+      overflow: hidden;
+    }
+
+    .card-img img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-img span.badge {
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      background: rgba(255,255,255,0.9);
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      border: 1px solid var(--border);
+    }
+
+    .card-body {
+      padding: 8px 10px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .card-meta {
+      font-size: 0.75rem;
+      color: #666;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .card-price-row {
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .price {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--primary);
+    }
+
+    .price small {
+      font-weight: 400;
+      font-size: 0.7rem;
+      color: #777;
+    }
+
+    .card-tags {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .card-tag {
+      font-size: 0.65rem;
+      padding: 3px 6px;
+      border-radius: 999px;
+      background: #f6f1f3;
+      color: #6c4854;
+    }
+
+    .empty-state {
+      font-size: 0.85rem;
+      color: #777;
+      padding: 8px;
+    }
+
+    .side-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .panel-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .panel-card h3 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .panel-card p {
+      font-size: 0.8rem;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .sell-form .field {
+      margin-bottom: 8px;
+    }
+
+    .sell-form input,
+    .sell-form select,
+    .sell-form textarea {
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 6px 8px;
+      font-size: 0.8rem;
+      resize: vertical;
+      outline: none;
+      width: 100%;
+      background: #fff;
+    }
+
+    .sell-form input:focus,
+    .sell-form select:focus,
+    .sell-form textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(182, 32, 77, 0.2);
+    }
+
+    .hint {
+      font-size: 0.7rem;
+      color: #888;
+    }
+
+    .steps-list {
+      list-style: none;
+      padding-left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 0.78rem;
+      color: #555;
+    }
+
+    .steps-list li::before {
+      content: "•";
+      color: var(--primary);
+      display: inline-block;
+      width: 12px;
+      margin-left: -2px;
+    }
+
+    footer {
+      margin-top: 20px;
+      font-size: 0.75rem;
+      text-align: center;
+      color: #999;
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    .text-small {
+      font-size: 0.75rem;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <!-- Mode chooser / Login -->
+  <div id="authScreen">
+    <div class="auth-card">
+      <h1>Tej Shree Collection</h1>
+      <p>Choose how you want to enter the site.</p>
+
+      <div class="auth-section">
+        <strong style="font-size:0.85rem;">Guest access (no login)</strong>
+        <p class="text-small">View all resale sarees and contact on WhatsApp. No account needed.</p>
+        <button id="guestBtn" class="btn btn-outline">Continue as guest</button>
+      </div>
+
+      <div class="auth-section">
+        <strong style="font-size:0.85rem;">Admin login</strong>
+        <label class="auth-label" for="adminPassword">Admin password</label>
+        <input id="adminPassword" type="password" class="auth-input" placeholder="Enter admin password" />
+        <div class="auth-hint">Demo password: <code>TSADMIN123</code> (change in code later)</div>
+        <div class="mode-buttons">
+          <button id="adminLoginBtn" class="btn btn-primary">Login as Admin</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actual app content -->
+  <div id="appContent" style="display:none;">
+    <div class="app-shell">
+      <header>
+        <div class="logo-area">
+          <div class="logo-round"></div>
+          <div>
+            <h1>Tej Shree Collection</h1>
+            <span class="tagline">Pre-loved sarees, new stories ✨</span>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <span class="pill">Free listing • No commission</span>
+          <span id="adminBadge" class="admin-badge" style="display:none;">Admin mode</span>
+          <button class="btn btn-outline" id="scrollToSellBtn" style="display:none;">Admin: Add saree</button>
+          <button class="btn btn-primary" id="scrollToShopBtn">Browse collection</button>
+          <button class="btn btn-outline" id="logoutBtn">Logout</button>
+        </div>
+      </header>
+
+      <main>
+        <!-- LEFT: PRODUCTS -->
+        <section class="products-panel">
+          <div class="hero-card">
+            <div class="hero-copy">
+              <h2>Give your sarees a second life</h2>
+              <p>List your gently used sarees with Tej Shree Collection and connect with buyers who love unique pieces at honest prices.</p>
+              <div class="hero-meta">
+                <span class="stats">⭐ Handpicked, pre-loved sarees</span>
+                <span class="stats">🧺 Pure silk, cotton, designer &amp; more</span>
+              </div>
+            </div>
+            <div>
+              <button class="btn btn-primary" id="sellNowBtn" style="display:none;">Admin: Add saree</button>
+            </div>
+          </div>
+
+          <!-- FILTERS -->
+          <section class="filters-card" id="shop">
+            <h3>Filter sarees</h3>
+            <div class="field">
+              <label for="fabricFilter">Fabric</label>
+              <select id="fabricFilter">
+                <option value="">All fabrics</option>
+                <option value="Silk">Silk</option>
+                <option value="Cotton">Cotton</option>
+                <option value="Linen">Linen</option>
+                <option value="Georgette">Georgette</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="conditionFilter">Condition</label>
+              <select id="conditionFilter">
+                <option value="">Any</option>
+                <option value="Like New">Like New</option>
+                <option value="Gently Used">Gently Used</option>
+                <option value="Vintage">Vintage</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="maxPriceFilter">Max Price (₹)</label>
+              <input type="number" id="maxPriceFilter" placeholder="e.g. 2500" min="0" />
+            </div>
+            <button class="btn" id="clearFiltersBtn">Clear</button>
+          </section>
+
+          <!-- PRODUCTS GRID -->
+          <section class="products-grid" id="productsGrid">
+            <!-- Cards inserted by JS -->
+          </section>
+          <div class="empty-state" id="emptyState" style="display:none;">
+            No sarees match these filters. Try changing fabric, condition or price.
+          </div>
+        </section>
+
+        <!-- RIGHT: SIDE PANEL -->
+        <aside class="side-panel">
+          <!-- ADMIN PANEL: only visible in admin mode -->
+          <section class="panel-card" id="adminPanel" style="display:none;">
+            <h3>Add / Upload saree (Admin)</h3>
+            <p>Upload saree picture and details. It will be added to the main listing and stored in this browser.</p>
+
+            <form class="sell-form" id="adminAddForm">
+              <div class="field">
+                <label>Saree title</label>
+                <input type="text" id="adminTitle" placeholder="E.g. Red Kanchivaram silk" required />
+              </div>
+              <div class="field">
+                <label>Price (₹)</label>
+                <input type="number" id="adminPrice" min="0" placeholder="₹" required />
+              </div>
+              <div class="field">
+                <label>Fabric</label>
+                <select id="adminFabric" required>
+                  <option value="">Select</option>
+                  <option value="Silk">Silk</option>
+                  <option value="Cotton">Cotton</option>
+                  <option value="Linen">Linen</option>
+                  <option value="Georgette">Georgette</option>
+                  <option value="Other">Other / Mix</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Condition</label>
+                <select id="adminCondition" required>
+                  <option value="">Select</option>
+                  <option value="Like New">Like New</option>
+                  <option value="Gently Used">Gently Used</option>
+                  <option value="Vintage">Vintage</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>City</label>
+                <input type="text" id="adminCity" placeholder="E.g. Chennai" required />
+              </div>
+              <div class="field">
+                <label>Blouse details</label>
+                <input type="text" id="adminBlouse" placeholder="Unstitched / Stitched 36 / No blouse" />
+              </div>
+              <div class="field">
+                <label>Tagline / short note</label>
+                <input type="text" id="adminTagline" placeholder="Wedding perfect / Office wear" />
+              </div>
+              <div class="field">
+                <label>Photo</label>
+                <input type="file" id="adminPhoto" accept="image/*" required />
+                <span class="hint">Image is stored locally in your browser (no server upload in this demo).</span>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Add to listing</button>
+            </form>
+
+            <p class="hint" style="margin-top:6px;">
+              Note: This is a front-end demo. For real deployment, connect this to a backend / database.
+            </p>
+          </section>
+
+          <!-- INFO PANEL (visible for all) -->
+          <section class="panel-card">
+            <h3>How it works</h3>
+            <ul class="steps-list">
+              <li>Buyers browse sarees and contact on WhatsApp (+91 98841 91310).</li>
+              <li>As admin, you can log in and add new sarees with photos and price.</li>
+              <li>Data added here is stored in your browser (localStorage) in this demo.</li>
+            </ul>
+          </section>
+        </aside>
+      </main>
+
+      <footer>
+        © <span id="yearSpan"></span> Tej Shree Collection • Compact resale saree web app.  
+        Customize by editing <code>index.html</code>.
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    // CONFIG
+    const ADMIN_PASSWORD = "TSADMIN123";
+    const ADMIN_WHATSAPP = "919884191310"; // Tej Shree Collection
+
+    // --- DEMO DATA: default sample sarees ---
+    const defaultSarees = [
+      {
+        id: 1,
+        title: "Maroon Kanchivaram Silk Saree",
+        fabric: "Silk",
+        condition: "Like New",
+        price: 5200,
+        city: "Chennai",
+        blouse: "Unstitched",
+        tagLine: "Wedding / reception perfect",
+        whatsapp: ADMIN_WHATSAPP
+      },
+      {
+        id: 2,
+        title: "Peach Soft Silk with Silver Zari",
+        fabric: "Silk",
+        condition: "Gently Used",
+        price: 3200,
+        city: "Chennai",
+        blouse: "Stitched 36",
+        tagLine: "One-time worn",
+        whatsapp: ADMIN_WHATSAPP
+      },
+      {
+        id: 3,
+        title: "Handloom Cotton Saree – Indigo",
+        fabric: "Cotton",
+        condition: "Gently Used",
+        price: 1600,
+        city: "Chennai",
+        blouse: "No blouse",
+        tagLine: "Office / daily wear",
+        whatsapp: ADMIN_WHATSAPP
+      },
+      {
+        id: 4,
+        title: "Linen Floral Printed Saree",
+        fabric: "Linen",
+        condition: "Like New",
+        price: 2100,
+        city: "Chennai",
+        blouse: "Running blouse",
+        tagLine: "Brunch / casual outings",
+        whatsapp: ADMIN_WHATSAPP
+      },
+      {
+        id: 5,
+        title: "Green Georgette Partywear Saree",
+        fabric: "Georgette",
+        condition: "Vintage",
+        price: 1200,
+        city: "Chennai",
+        blouse: "Stitched 38",
+        tagLine: "Lightweight & flowy",
+        whatsapp: ADMIN_WHATSAPP
+      }
+    ];
+
+    let sarees = [];
+    let isAdmin = false;
+
+    // DOM references
+    const authScreen = document.getElementById("authScreen");
+    const appContent = document.getElementById("appContent");
+    const guestBtn = document.getElementById("guestBtn");
+    const adminLoginBtn = document.getElementById("adminLoginBtn");
+    const adminPasswordInput = document.getElementById("adminPassword");
+
+    const productsGrid = document.getElementById("productsGrid");
+    const emptyState = document.getElementById("emptyState");
+
+    const fabricFilter = document.getElementById("fabricFilter");
+    const conditionFilter = document.getElementById("conditionFilter");
+    const maxPriceFilter = document.getElementById("maxPriceFilter");
+    const clearFiltersBtn = document.getElementById("clearFiltersBtn");
+
+    const adminPanel = document.getElementById("adminPanel");
+    const adminBadge = document.getElementById("adminBadge");
+    const scrollToSellBtn = document.getElementById("scrollToSellBtn");
+    const sellNowBtn = document.getElementById("sellNowBtn");
+    const scrollToShopBtn = document.getElementById("scrollToShopBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const sellSection = document.getElementById("adminPanel"); // scroll target
+
+    const adminAddForm = document.getElementById("adminAddForm");
+    const adminTitle = document.getElementById("adminTitle");
+    const adminPrice = document.getElementById("adminPrice");
+    const adminFabric = document.getElementById("adminFabric");
+    const adminCondition = document.getElementById("adminCondition");
+    const adminCity = document.getElementById("adminCity");
+    const adminBlouse = document.getElementById("adminBlouse");
+    const adminTagline = document.getElementById("adminTagline");
+    const adminPhoto = document.getElementById("adminPhoto");
+
+    // Load admin-added sarees from localStorage
+    function loadAdminSarees() {
+      try {
+        const raw = localStorage.getItem("tejshree_admin_sarees");
+        if (!raw) return [];
+        const arr = JSON.parse(raw);
+        if (!Array.isArray(arr)) return [];
+        return arr;
+      } catch (e) {
+        console.error("Failed to parse admin sarees from storage", e);
+        return [];
+      }
+    }
+
+    function saveAdminSarees(adminSarees) {
+      localStorage.setItem("tejshree_admin_sarees", JSON.stringify(adminSarees));
+    }
+
+    function buildSareeList() {
+      const adminSarees = loadAdminSarees();
+      sarees = [...defaultSarees, ...adminSarees];
+    }
+
+    function renderSarees(list) {
+      productsGrid.innerHTML = "";
+
+      if (!list.length) {
+        emptyState.style.display = "block";
+        return;
+      }
+      emptyState.style.display = "none";
+
+      list.forEach((s) => {
+        const card = document.createElement("article");
+        card.className = "card";
+
+        const hasImage = !!s.imageData;
+
+        card.innerHTML = `
+          <div class="card-img">
+            <span class="badge">${s.condition}</span>
+            ${hasImage ? `<img src="${s.imageData}" alt="${s.title}" />` : ``}
+          </div>
+          <div class="card-body">
+            <div class="card-title">${s.title}</div>
+            <div class="card-meta">
+              <span>${s.fabric}</span>
+              <span>Blouse: ${s.blouse || "—"}</span>
+              <span>${s.city}</span>
+            </div>
+            <div class="card-tags">
+              ${s.tagLine ? `<span class="card-tag">${s.tagLine}</span>` : ""}
+            </div>
+            <div class="card-price-row">
+              <div class="price">₹${Number(s.price).toLocaleString("en-IN")} <small>+ shipping</small></div>
+              <button class="btn btn-outline btn-sm" data-id="${s.id}">WhatsApp</button>
+            </div>
+          </div>
+        `;
+        productsGrid.appendChild(card);
+      });
+
+      // Attach WhatsApp click handlers
+      document.querySelectorAll(".card button[data-id]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-id");
+          const saree = sarees.find((x) => String(x.id) === String(id));
+          if (!saree) return;
+          const msg =
+            `Hi Tej Shree Collection, I'm interested in this saree:\n\n` +
+            `*${saree.title}*\n` +
+            `Fabric: ${saree.fabric}\n` +
+            `Condition: ${saree.condition}\n` +
+            `Price: ₹${Number(saree.price).toLocaleString("en-IN")}\n` +
+            `City: ${saree.city}\n\n` +
+            `Is it still available?`;
+          const encoded = encodeURIComponent(msg);
+          const url = `https://wa.me/${saree.whatsapp || ADMIN_WHATSAPP}?text=${encoded}`;
+          window.open(url, "_blank");
+        });
+      });
+    }
+
+    function applyFilters() {
+      const fabricVal = fabricFilter.value;
+      const conditionVal = conditionFilter.value;
+      const maxPriceVal = maxPriceFilter.value ? Number(maxPriceFilter.value) : null;
+
+      const filtered = sarees.filter((s) => {
+        if (fabricVal && s.fabric !== fabricVal) return false;
+        if (conditionVal && s.condition !== conditionVal) return false;
+        if (maxPriceVal !== null && Number(s.price) > maxPriceVal) return false;
+        return true;
+      });
+
+      renderSarees(filtered);
+    }
+
+    fabricFilter.addEventListener("change", applyFilters);
+    conditionFilter.addEventListener("change", applyFilters);
+    maxPriceFilter.addEventListener("input", applyFilters);
+    clearFiltersBtn.addEventListener("click", () => {
+      fabricFilter.value = "";
+      conditionFilter.value = "";
+      maxPriceFilter.value = "";
+      applyFilters();
+    });
+
+    // Admin add form
+    adminAddForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!adminPhoto.files || !adminPhoto.files[0]) {
+        alert("Please choose a photo for this saree.");
+        return;
+      }
+
+      const file = adminPhoto.files[0];
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const imageData = evt.target.result;
+
+        const adminSarees = loadAdminSarees();
+        const newSaree = {
+          id: Date.now(),
+          title: adminTitle.value.trim(),
+          price: Number(adminPrice.value),
+          fabric: adminFabric.value,
+          condition: adminCondition.value,
+          city: adminCity.value.trim(),
+          blouse: adminBlouse.value.trim(),
+          tagLine: adminTagline.value.trim(),
+          whatsapp: ADMIN_WHATSAPP,
+          imageData
+        };
+
+        adminSarees.push(newSaree);
+        saveAdminSarees(adminSarees);
+        buildSareeList();
+        applyFilters(); // re-render
+
+        adminAddForm.reset();
+        alert("Saree added to listing!");
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Smooth scroll
+    function scrollToElement(el) {
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    scrollToShopBtn.addEventListener("click", () => {
+      scrollToElement(document.getElementById("shop"));
+    });
+
+    scrollToSellBtn.addEventListener("click", () => {
+      scrollToElement(sellSection);
+    });
+
+    sellNowBtn.addEventListener("click", () => {
+      scrollToElement(sellSection);
+    });
+
+    // Auth handling
+    function enterApp(adminMode) {
+      isAdmin = adminMode;
+      authScreen.style.display = "none";
+      appContent.style.display = "block";
+
+      // Toggle admin UI bits
+      adminPanel.style.display = isAdmin ? "block" : "none";
+      adminBadge.style.display = isAdmin ? "inline-flex" : "none";
+      scrollToSellBtn.style.display = isAdmin ? "inline-flex" : "none";
+      sellNowBtn.style.display = isAdmin ? "inline-flex" : "none";
+
+      buildSareeList();
+      applyFilters();
+      document.getElementById("yearSpan").textContent = new Date().getFullYear();
+    }
+
+    guestBtn.addEventListener("click", () => {
+      enterApp(false);
+    });
+
+    adminLoginBtn.addEventListener("click", () => {
+      const pwd = adminPasswordInput.value;
+      if (pwd === ADMIN_PASSWORD) {
+        enterApp(true);
+      } else {
+        alert("Incorrect admin password.");
+      }
+    });
+
+    logoutBtn.addEventListener("click", () => {
+      // Simple logout: go back to auth screen
+      appContent.style.display = "none";
+      authScreen.style.display = "flex";
+      adminPasswordInput.value = "";
+      isAdmin = false;
+    });
+
+    // Init year (just in case)
+    document.getElementById("yearSpan").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+If you tell me where you plan to host (Netlify / GitHub Pages / your own hosting), I can also give you step-by-step deployment instructions for this file.
+
+You said:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tej Shree Collection – Resale Sarees</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --primary: #b6204d;
+      --primary-soft: #ffe6ef;
+      --bg: #faf5f7;
+      --text: #333;
+      --card-bg: #fff;
+      --border: #e4d4da;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --shadow-soft: 0 8px 18px rgba(0,0,0,0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .app-shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 12px 16px 32px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 18px;
+      margin-bottom: 16px;
+      background: var(--card-bg);
+      border-radius: 999px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border);
+      position: sticky;
+      top: 8px;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+
+    header .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-round {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffeef4, #b6204d);
+    }
+
+    header h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    header span.tagline {
+      font-size: 0.75rem;
+      color: #777;
+    }
+
+    header .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f5f2f3;
+      color: var(--text);
+      transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 10px rgba(182, 32, 77, 0.35);
+    }
+
+    .btn-outline {
+      border-color: var(--border);
+      background: #fff;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 0.7rem;
+      color: #555;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 850px) {
+      header {
+        flex-wrap: wrap;
+        border-radius: 18px;
+        align-items: flex-start;
+      }
+      main {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .products-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, var(--primary-soft), #fff);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .hero-copy {
+      max-width: 420px;
+    }
+
+    .hero-copy h2 {
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+    }
+
+    .hero-copy p {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .stats {
+      font-size: 0.75rem;
+      color: #555;
+    }
+
+    .filters-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      align-items: flex-end;
+    }
+
+    .filters-card h3 {
+      font-size: 0.9rem;
+      flex-basis: 100%;
+      margin-bottom: 2px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 120px;
+    }
+
+    .field label {
+      font-size: 0.75rem;
+      color: #666;
+    }
+
+    .field select,
+    .field input {
+      padding: 6px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+      background: #fff;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(182, 32, 77, 0.2);
+    }
+
+    .products-grid {
+      margin-top: 4px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.04);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.07);
+    }
+
+    .card-img {
+      position: relative;
+      padding-top: 70%;
+      background: radial-gradient(circle at 30% 20%, #ffeef5, #f0d0dd);
+    }
+
+    .card-img span.badge {
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      background: rgba(255,255,255,0.9);
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      border: 1px solid var(--border);
+    }
+
+    .card-body {
+      padding: 8px 10px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .card-meta {
+      font-size: 0.75rem;
+      color: #666;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .card-price-row {
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .price {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--primary);
+    }
+
+    .price small {
+      font-weight: 400;
+      font-size: 0.7rem;
+      color: #777;
+    }
+
+    .card-tags {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .card-tag {
+      font-size: 0.65rem;
+      padding: 3px 6px;
+      border-radius: 999px;
+      background: #f6f1f3;
+      color: #6c4854;
+    }
+
+    .empty-state {
+      font-size: 0.85rem;
+      color: #777;
+      padding: 8px;
+    }
+
+    .side-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .panel-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .panel-card h3 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .panel-card p {
+      font-size: 0.8rem;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .sell-form .field {
+      margin-bottom: 8px;
+    }
+
+    .sell-form input,
+    .sell-form select,
+    .sell-form textarea {
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 6px 8px;
+      font-size: 0.8rem;
+      resize: vertical;
+      outline: none;
+      width: 100%;
+      background: #fff;
+    }
+
+    .sell-form input:focus,
+    .sell-form select:focus,
+    .sell-form textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(182, 32, 77, 0.2);
+    }
+
+    .hint {
+      font-size: 0.7rem;
+      color: #888;
+    }
+
+    .steps-list {
+      list-style: none;
+      padding-left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 0.78rem;
+      color: #555;
+    }
+
+    .steps-list li::before {
+      content: "•";
+      color: var(--primary);
+      display: inline-block;
+      width: 12px;
+      margin-left: -2px;
+    }
+
+    footer {
+      margin-top: 20px;
+      font-size: 0.75rem;
+      text-align: center;
+      color: #999;
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header>
+      <div class="logo-area">
+        <div class="logo-round"></div>
+        <div>
+          <h1>Tej Shree Collection</h1>
+          <span class="tagline">Pre-loved sarees, new stories ✨</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <span class="pill">Free listing • No commission</span>
+        <button class="btn btn-outline" id="scrollToSellBtn">Sell your saree</button>
+        <button class="btn btn-primary" id="scrollToShopBtn">Browse collection</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- LEFT: PRODUCTS -->
+      <section class="products-panel">
+        <div class="hero-card">
+          <div class="hero-copy">
+            <h2>Give your sarees a second life</h2>
+            <p>List your gently used sarees with Tej Shree Collection and connect with buyers who love unique pieces at honest prices.</p>
+            <div class="hero-meta">
+              <span class="stats">⭐ Handpicked, pre-loved sarees</span>
+              <span class="stats">🧺 Pure silk, cotton, designer &amp; more</span>
+            </div>
+          </div>
+          <div>
+            <button class="btn btn-primary" id="sellNowBtn">List a saree</button>
+          </div>
+        </div>
+
+        <!-- FILTERS -->
+        <section class="filters-card" id="shop">
+          <h3>Filter sarees</h3>
+          <div class="field">
+            <label for="fabricFilter">Fabric</label>
+            <select id="fabricFilter">
+              <option value="">All fabrics</option>
+              <option value="Silk">Silk</option>
+              <option value="Cotton">Cotton</option>
+              <option value="Linen">Linen</option>
+              <option value="Georgette">Georgette</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="conditionFilter">Condition</label>
+            <select id="conditionFilter">
+              <option value="">Any</option>
+              <option value="Like New">Like New</option>
+              <option value="Gently Used">Gently Used</option>
+              <option value="Vintage">Vintage</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="maxPriceFilter">Max Price (₹)</label>
+            <input type="number" id="maxPriceFilter" placeholder="e.g. 2500" min="0" />
+          </div>
+          <button class="btn" id="clearFiltersBtn">Clear</button>
+        </section>
+
+        <!-- PRODUCTS GRID -->
+        <section class="products-grid" id="productsGrid">
+          <!-- Cards inserted by JS -->
+        </section>
+        <div class="empty-state" id="emptyState" style="display:none;">
+          No sarees match these filters. Try changing fabric, condition or price.
+        </div>
+      </section>
+
+      <!-- RIGHT: SELL FORM / INFO -->
+      <aside class="side-panel">
+        <section class="panel-card" id="sellSection">
+          <h3>Sell your saree</h3>
+          <p>Share details below. You’ll get buyer enquiries directly on WhatsApp / phone.</p>
+
+          <form class="sell-form" id="sellForm">
+            <div class="field">
+              <label>Your name</label>
+              <input type="text" id="sellerName" placeholder="E.g. Priya" required />
+            </div>
+            <div class="field">
+              <label>WhatsApp number</label>
+              <input type="tel" id="sellerPhone" placeholder="10 digit number" required />
+              <span class="hint">We’ll show this only to interested buyers.</span>
+            </div>
+            <div class="field">
+              <label>Saree title</label>
+              <input type="text" id="sareeTitle" placeholder="E.g. Red Kanchivaram silk" required />
+            </div>
+            <div class="field">
+              <label>Approx. price (₹)</label>
+              <input type="number" id="sareePrice" min="0" placeholder="₹" required />
+            </div>
+            <div class="field">
+              <label>Fabric</label>
+              <select id="sareeFabric" required>
+                <option value="">Select</option>
+                <option value="Silk">Silk</option>
+                <option value="Cotton">Cotton</option>
+                <option value="Linen">Linen</option>
+                <option value="Georgette">Georgette</option>
+                <option value="Other">Other / Mix</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Condition</label>
+              <select id="sareeCondition" required>
+                <option value="">Select</option>
+                <option value="Like New">Like New</option>
+                <option value="Gently Used">Gently Used</option>
+                <option value="Vintage">Vintage</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Details</label>
+              <textarea id="sareeDetails" rows="3" placeholder="Occasion worn, blouse status, fall & pico, any damage…"></textarea>
+            </div>
+            <div class="field">
+              <label>Photos (for your reference)</label>
+              <input type="file" id="sareePhotos" accept="image/*" multiple />
+              <span class="hint">In this demo, photos are not uploaded. You can WhatsApp them to buyers.</span>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Generate WhatsApp message</button>
+          </form>
+
+          <p class="hint" style="margin-top:6px;">
+            This is a front-end only demo. For a live site, you can connect this form to your own backend / Google Sheet / Firebase later.
+          </p>
+        </section>
+
+        <section class="panel-card">
+          <h3>How it works</h3>
+          <ul class="steps-list">
+            <li>Fill the “Sell your saree” form with all details.</li>
+            <li>Send the auto-generated WhatsApp message to Tej Shree Collection.</li>
+            <li>We verify and list your saree in the store.</li>
+            <li>Interested buyers contact you directly via WhatsApp.</li>
+          </ul>
+        </section>
+      </aside>
+    </main>
+
+    <footer>
+      © <span id="yearSpan"></span> Tej Shree Collection • Compact resale saree web app.  
+      Customize by editing <code>index.html</code>.
+    </footer>
+  </div>
+
+  <script>
+    // --- DEMO DATA: Sample sarees ---
+    // All sample listings contact Tej Shree Collection WhatsApp: +91 9884191310
+    const sarees = [
+      {
+        id: 1,
+        title: "Maroon Kanchivaram Silk Saree",
+        fabric: "Silk",
+        condition: "Like New",
+        price: 5200,
+        city: "Chennai",
+        blouse: "Unstitched",
+        tagLine: "Wedding / reception perfect",
+        whatsapp: "919884191310"
+      },
+      {
+        id: 2,
+        title: "Peach Soft Silk with Silver Zari",
+        fabric: "Silk",
+        condition: "Gently Used",
+        price: 3200,
+        city: "Chennai",
+        blouse: "Stitched 36",
+        tagLine: "One-time worn",
+        whatsapp: "919884191310"
+      },
+      {
+        id: 3,
+        title: "Handloom Cotton Saree – Indigo",
+        fabric: "Cotton",
+        condition: "Gently Used",
+        price: 1600,
+        city: "Chennai",
+        blouse: "No blouse",
+        tagLine: "Office / daily wear",
+        whatsapp: "919884191310"
+      },
+      {
+        id: 4,
+        title: "Linen Floral Printed Saree",
+        fabric: "Linen",
+        condition: "Like New",
+        price: 2100,
+        city: "Chennai",
+        blouse: "Running blouse",
+        tagLine: "Brunch / casual outings",
+        whatsapp: "919884191310"
+      },
+      {
+        id: 5,
+        title: "Green Georgette Partywear Saree",
+        fabric: "Georgette",
+        condition: "Vintage",
+        price: 1200,
+        city: "Chennai",
+        blouse: "Stitched 38",
+        tagLine: "Lightweight & flowy",
+        whatsapp: "919884191310"
+      }
+    ];
+
+    const productsGrid = document.getElementById("productsGrid");
+    const emptyState = document.getElementById("emptyState");
+
+    const fabricFilter = document.getElementById("fabricFilter");
+    const conditionFilter = document.getElementById("conditionFilter");
+    const maxPriceFilter = document.getElementById("maxPriceFilter");
+    const clearFiltersBtn = document.getElementById("clearFiltersBtn");
+
+    function renderSarees(list) {
+      productsGrid.innerHTML = "";
+
+      if (!list.length) {
+        emptyState.style.display = "block";
+        return;
+      }
+      emptyState.style.display = "none";
+
+      list.forEach((s) => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = 
+          <div class="card-img">
+            <span class="badge">${s.condition}</span>
+          </div>
+          <div class="card-body">
+            <div class="card-title">${s.title}</div>
+            <div class="card-meta">
+              <span>${s.fabric}</span>
+              <span>Blouse: ${s.blouse}</span>
+              <span>${s.city}</span>
+            </div>
+            <div class="card-tags">
+              <span class="card-tag">${s.tagLine}</span>
+            </div>
+            <div class="card-price-row">
+              <div class="price">₹${s.price.toLocaleString("en-IN")} <small>+ shipping</small></div>
+              <button class="btn btn-outline btn-sm" data-id="${s.id}">WhatsApp</button>
+            </div>
+          </div>
+        ;
+        productsGrid.appendChild(card);
+      });
+
+      // Attach WhatsApp click handlers
+      document.querySelectorAll(".card button[data-id]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = parseInt(btn.getAttribute("data-id"), 10);
+          const saree = sarees.find((x) => x.id === id);
+          if (!saree) return;
+          const msg =
+            Hi Tej Shree Collection, I'm interested in this saree:\n\n +
+            *${saree.title}*\n +
+            Fabric: ${saree.fabric}\n +
+            Condition: ${saree.condition}\n +
+            Price: ₹${saree.price.toLocaleString("en-IN")}\n +
+            City: ${saree.city}\n\n +
+            Is it still available?;
+          const encoded = encodeURIComponent(msg);
+          const url = https://wa.me/${saree.whatsapp}?text=${encoded};
+          window.open(url, "_blank");
+        });
+      });
+    }
+
+    function applyFilters() {
+      const fabricVal = fabricFilter.value;
+      const conditionVal = conditionFilter.value;
+      const maxPriceVal = maxPriceFilter.value ? Number(maxPriceFilter.value) : null;
+
+      const filtered = sarees.filter((s) => {
+        if (fabricVal && s.fabric !== fabricVal) return false;
+        if (conditionVal && s.condition !== conditionVal) return false;
+        if (maxPriceVal !== null && s.price > maxPriceVal) return false;
+        return true;
+      });
+
+      renderSarees(filtered);
+    }
+
+    fabricFilter.addEventListener("change", applyFilters);
+    conditionFilter.addEventListener("change", applyFilters);
+    maxPriceFilter.addEventListener("input", applyFilters);
+    clearFiltersBtn.addEventListener("click", () => {
+      fabricFilter.value = "";
+      conditionFilter.value = "";
+      maxPriceFilter.value = "";
+      applyFilters();
+    });
+
+    // Sell form -> generate WhatsApp message
+    const sellForm = document.getElementById("sellForm");
+    sellForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("sellerName").value.trim();
+      const phone = document.getElementById("sellerPhone").value.trim();
+      const title = document.getElementById("sareeTitle").value.trim();
+      const price = document.getElementById("sareePrice").value.trim();
+      const fabric = document.getElementById("sareeFabric").value;
+      const condition = document.getElementById("sareeCondition").value;
+      const details = document.getElementById("sareeDetails").value.trim();
+
+      // Admin number: Tej Shree Collection WhatsApp
+      const ADMIN_WHATSAPP = "919884191310";
+
+      const msg =
+        New saree listing request for Tej Shree Collection:\n\n +
+        Seller: ${name}\n +
+        Phone: ${phone}\n\n +
+        Title: ${title}\n +
+        Price: ₹${price}\n +
+        Fabric: ${fabric}\n +
+        Condition: ${condition}\n\n +
+        (details ? Details: ${details}\n\n : "") +
+        Photos: Seller will share on WhatsApp.\n\n +
+        Please review and list on the store.;
+
+      const url = https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(msg)};
+      window.open(url, "_blank");
+    });
+
+    // Smooth scroll buttons
+    function scrollToElement(el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    document.getElementById("scrollToSellBtn").addEventListener("click", () => {
+      scrollToElement(document.getElementById("sellSection"));
+    });
+
+    document.getElementById("sellNowBtn").addEventListener("click", () => {
+      scrollToElement(document.getElementById("sellSection"));
+    });
+
+    document.getElementById("scrollToShopBtn").addEventListener("click", () => {
+      scrollToElement(document.getElementById("shop"));
+    });
+
+    // Init
+    renderSarees(sarees);
+    document.getElementById("yearSpan").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>  in this remove sell your saree tab
+ChatGPT said:
+
+Thought for 6s
+Got it 👍 You want this version to be only for buyers, so we’ll remove the “Sell your saree” tab/form and its buttons.
+
+Here’s your cleaned-up index.html with:
+
+No Sell your saree side panel
+
+No Sell your saree button in header
+
+No “List a saree” button in hero
+
+All sell-form JavaScript removed
+
+Just replace your file with this:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tej Shree Collection – Resale Sarees</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --primary: #b6204d;
+      --primary-soft: #ffe6ef;
+      --bg: #faf5f7;
+      --text: #333;
+      --card-bg: #fff;
+      --border: #e4d4da;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --shadow-soft: 0 8px 18px rgba(0,0,0,0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .app-shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 12px 16px 32px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 18px;
+      margin-bottom: 16px;
+      background: var(--card-bg);
+      border-radius: 999px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border);
+      position: sticky;
+      top: 8px;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+
+    header .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-round {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffeef4, #b6204d);
+    }
+
+    header h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    header span.tagline {
+      font-size: 0.75rem;
+      color: #777;
+    }
+
+    header .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f5f2f3;
+      color: var(--text);
+      transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 10px rgba(182, 32, 77, 0.35);
+    }
+
+    .btn-outline {
+      border-color: var(--border);
+      background: #fff;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 0.7rem;
+      color: #555;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 850px) {
+      header {
+        flex-wrap: wrap;
+        border-radius: 18px;
+        align-items: flex-start;
+      }
+      main {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .products-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, var(--primary-soft), #fff);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .hero-copy {
+      max-width: 420px;
+    }
+
+    .hero-copy h2 {
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+    }
+
+    .hero-copy p {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .stats {
+      font-size: 0.75rem;
+      color: #555;
+    }
+
+    .filters-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      align-items: flex-end;
+    }
+
+    .filters-card h3 {
+      font-size: 0.9rem;
+      flex-basis: 100%;
+      margin-bottom: 2px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 120px;
+    }
+
+    .field label {
+      font-size: 0.75rem;
+      color: #666;
+    }
+
+    .field select,
+    .field input {
+      padding: 6px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+      background: #fff;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(182, 32, 77, 0.2);
+    }
+
+    .products-grid {
+      margin-top: 4px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.04);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.07);
+    }
+
+    .card-img {
+      position: relative;
+      padding-top: 70%;
+      background: radial-gradient(circle at 30% 20%, #ffeef5, #f0d0dd);
+    }
+
+    .card-img span.badge {
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      background: rgba(255,255,255,0.9);
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      border: 1px solid var(--border);
+    }
+
+    .card-body {
+      padding: 8px 10px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .card-meta {
+      font-size: 0.75rem;
+      color: #666;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .card-price-row {
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .price {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--primary);
+    }
+
+    .price small {
+      font-weight: 400;
+      font-size: 0.7rem;
+      color: #777;
+    }
+
+    .card-tags {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .card-tag {
+      font-size: 0.65rem;
+      padding: 3px 6px;
+      border-radius: 999px;
+      background: #f6f1f3;
+      color: #6c4854;
+    }
+
+    .empty-state {
+      font-size: 0.85rem;
+      color: #777;
+      padding: 8px;
+    }
+
+    .side-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .panel-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .panel-card h3 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .panel-card p {
+      font-size: 0.8rem;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .steps-list {
+      list-style: none;
+      padding-left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 0.78rem;
+      color: #555;
+    }
+
+    .steps-list li::before {
+      content: "•";
+      color: var(--primary);
+      display: inline-block;
+      width: 12px;
+      margin-left: -2px;
+    }
+
+    footer {
+      margin-top: 20px;
+      font-size: 0.75rem;
+      text-align: center;
+      color: #999;
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header>
+      <div class="logo-area">
+        <div class="logo-round"></div>
+        <div>
+          <h1>Tej Shree Collection</h1>
+          <span class="tagline">Pre-loved sarees, new stories ✨</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <span class="pill">Resale sarees • WhatsApp to buy</span>
+        <button class="btn btn-primary" id="scrollToShopBtn">Browse collection</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- LEFT: PRODUCTS -->
+      <section class="products-panel">
+        <div class="hero-card">
+          <div class="hero-copy">
+            <h2>Handpicked resale sarees</h2>
+            <p>Explore beautiful pre-loved sarees from Tej Shree Collection and contact directly on WhatsApp for booking.</p>
+            <div class="hero-meta">
+              <span class="stats">⭐ Curated pieces</span>
+              <span class="stats">📍 Based in Chennai</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- FILTERS -->
+        <section class="filters-card" id="shop">
+          <h3>Filter sarees</h3>
+          <div class="field">
+            <label for="fabricFilter">Fabric</label>
+            <select id="fabricFilter">
+              <option value="">All fabrics</option>
+              <option value="Silk">Silk</option>
+              <option value="Cotton">Cotton</option>
+              <option value="Linen">Linen</option>
+              <option value="Georgette">Georgette</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="conditionFilter">Condition</label>
+            <select id="conditionFilter">
+              <option value="">Any</option>
+              <option value="Like New">Like New</option>
+              <option value="Gently Used">Gently Used</option>
+              <option value="Vintage">Vintage</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="maxPriceFilter">Max Price (₹)</label>
+            <input type="number" id="maxPriceFilter" placeholder="e.g. 2500" min="0" />
+          </div>
+          <button class="btn" id="clearFiltersBtn">Clear</button>
+        </section>
+
+        <!-- PRODUCTS GRID -->
+        <section class="products-grid" id="productsGrid">
+          <!-- Cards inserted by JS -->
+        </section>
+        <div class="empty-state" id="emptyState" style="display:none;">
+          No sarees match these filters. Try changing fabric, condition or price.
+        </div>
+      </section>
+
+      <!-- RIGHT: INFO PANEL ONLY (no sell form) -->
+      <aside class="side-panel">
+        <section class="panel-card">
+          <h3>How to buy</h3>
+          <p>Like a saree? Open it in WhatsApp and message Tej Shree Collection directly.</p>
+          <ul class="steps-list">
+            <li>Browse the collection on the left.</li>
+            <li>Click the <strong>WhatsApp</strong> button on any saree.</li>
+            <li>Share your size, city and any questions.</li>
+            <li>Confirm payment & delivery details with Tej Shree Collection.</li>
+          </ul>
+        </section>
+      </aside>
+    </main>
+
+    <footer>
+      © <span id="yearSpan"></span> Tej Shree Collection • Resale saree showcase.
+    </footer>
+  </div>
+
+  <script>
+    // --- DEMO DATA: Sample sarees ---
+    const sarees = [
+      {
+        id: 1,
+        title: "Maroon Kanchivaram Silk Saree",
+        fabric: "Silk",
+        condition: "Like New",
+        price: 5200,
+        city: "Chennai",
+        blouse: "Unstitched",
+        tagLine: "Wedding / reception perfect",
+        whatsapp: "919884191310"
+      },
+      {
+        id: 2,
+        title: "Peach Soft Silk with Silver Zari",
+        fabric: "Silk",
+        condition: "Gently Used",
+        price: 3200,
+        city: "Chennai",
+        blouse: "Stitched 36",
+        tagLine: "One-time worn",
+        whatsapp: "919884191310"
+      },
+      {
+        id: 3,
+        title: "Handloom Cotton Saree – Indigo",
+        fabric: "Cotton",
+        condition: "Gently Used",
+        price: 1600,
+        city: "Chennai",
+        blouse: "No blouse",
+        tagLine: "Office / daily wear",
+        whatsapp: "919884191310"
+      },
+      {
+        id: 4,
+        title: "Linen Floral Printed Saree",
+        fabric: "Linen",
+        condition: "Like New",
+        price: 2100,
+        city: "Chennai",
+        blouse: "Running blouse",
+        tagLine: "Brunch / casual outings",
+        whatsapp: "919884191310"
+      },
+      {
+        id: 5,
+        title: "Green Georgette Partywear Saree",
+        fabric: "Georgette",
+        condition: "Vintage",
+        price: 1200,
+        city: "Chennai",
+        blouse: "Stitched 38",
+        tagLine: "Lightweight & flowy",
+        whatsapp: "919884191310"
+      }
+    ];
+
+    const productsGrid = document.getElementById("productsGrid");
+    const emptyState = document.getElementById("emptyState");
+
+    const fabricFilter = document.getElementById("fabricFilter");
+    const conditionFilter = document.getElementById("conditionFilter");
+    const maxPriceFilter = document.getElementById("maxPriceFilter");
+    const clearFiltersBtn = document.getElementById("clearFiltersBtn");
+
+    function renderSarees(list) {
+      productsGrid.innerHTML = "";
+
+      if (!list.length) {
+        emptyState.style.display = "block";
+        return;
+      }
+      emptyState.style.display = "none";
+
+      list.forEach((s) => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="card-img">
+            <span class="badge">${s.condition}</span>
+          </div>
+          <div class="card-body">
+            <div class="card-title">${s.title}</div>
+            <div class="card-meta">
+              <span>${s.fabric}</span>
+              <span>Blouse: ${s.blouse}</span>
+              <span>${s.city}</span>
+            </div>
+            <div class="card-tags">
+              <span class="card-tag">${s.tagLine}</span>
+            </div>
+            <div class="card-price-row">
+              <div class="price">₹${s.price.toLocaleString("en-IN")} <small>+ shipping</small></div>
+              <button class="btn btn-outline btn-sm" data-id="${s.id}">WhatsApp</button>
+            </div>
+          </div>
+        `;
+        productsGrid.appendChild(card);
+      });
+
+      // Attach WhatsApp click handlers
+      document.querySelectorAll(".card button[data-id]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = parseInt(btn.getAttribute("data-id"), 10);
+          const saree = sarees.find((x) => x.id === id);
+          if (!saree) return;
+          const msg =
+            `Hi Tej Shree Collection, I'm interested in this saree:\n\n` +
+            `*${saree.title}*\n` +
+            `Fabric: ${saree.fabric}\n` +
+            `Condition: ${saree.condition}\n` +
+            `Price: ₹${saree.price.toLocaleString("en-IN")}\n` +
+            `City: ${saree.city}\n\n` +
+            `Is it still available?`;
+          const encoded = encodeURIComponent(msg);
+          const url = `https://wa.me/${saree.whatsapp}?text=${encoded}`;
+          window.open(url, "_blank");
+        });
+      });
+    }
+
+    function applyFilters() {
+      const fabricVal = fabricFilter.value;
+      const conditionVal = conditionFilter.value;
+      const maxPriceVal = maxPriceFilter.value ? Number(maxPriceFilter.value) : null;
+
+      const filtered = sarees.filter((s) => {
+        if (fabricVal && s.fabric !== fabricVal) return false;
+        if (conditionVal && s.condition !== conditionVal) return false;
+        if (maxPriceVal !== null && s.price > maxPriceVal) return false;
+        return true;
+      });
+
+      renderSarees(filtered);
+    }
+
+    fabricFilter.addEventListener("change", applyFilters);
+    conditionFilter.addEventListener("change", applyFilters);
+    maxPriceFilter.addEventListener("input", applyFilters);
+    clearFiltersBtn.addEventListener("click", () => {
+      fabricFilter.value = "";
+      conditionFilter.value = "";
+      maxPriceFilter.value = "";
+      applyFilters();
+    });
+
+    function scrollToElement(el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    document.getElementById("scrollToShopBtn").addEventListener("click", () => {
+      scrollToElement(document.getElementById("shop"));
+    });
+
+    // Init
+    renderSarees(sarees);
+    document.getElementById("yearSpan").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+If you tell me later that you again want admin upload + login, we can keep this buyer-only page as public and build a separate admin page like admin.html just for you.
+
+You said:
+git repo max storage
+ChatGPT said:
+
+Thought for a few seconds
+Short answer: it depends where the repo is hosted.
+
+1. Pure Git (local repo)
+Git itself doesn’t have a hard “size limit”, but performance usually becomes painful if your repo goes into many GBs (especially with lots of binaries). Practically, people try to keep it below a few GB.
+
+2. GitHub
+For GitHub (most common case):
+
+Recommended repo size: keep it below 1 GB for good performance.
+
+Hard limit:
+
+GitHub will warn you if the repo gets close to 1 GB.
+
+Individual file size limit: 100 MB per file (you can’t push a file >100 MB via normal git; you must use Git LFS).
+
+GitHub hard limit for a repo is often quoted ~5 GB before you start getting serious issues / restrictions, though they don’t publish a single hard number for “repo max size” – but very large repos may be restricted or need Git LFS / archives.
+
+So:
+
+≤ 1 GB → ideal
+
+1–5 GB → works, but slower, warnings possible
+
+> 5 GB → not recommended; may need to reorganize / use LFS
+
+3. GitLab / Bitbucket (quick idea)
+GitLab.com: total repo size is controlled by project storage limits (varies by plan; free tier often around a few GB for the whole project including artifacts).
+
+Bitbucket Cloud: historically ~1 GB soft limit, 2 GB hard limit per repo (above that they don’t guarantee performance).
+
+If you tell me where you are hosting (GitHub, GitLab, Bitbucket, self-hosted), I can give the exact current limits + tips to reduce repo size (BFG, git filter-repo, LFS, etc.).
+
+You said:
+use LFS
+ChatGPT said:
+Here is a clean, step-by-step guide to enable Git LFS (Large File Storage) and start using it for your repo.
+This works for GitHub, GitLab, Bitbucket — all support LFS.
+
+✅ What Git LFS Does
+Git LFS stores large files (images, videos, binaries) outside your main repo and replaces them with lightweight pointers.
+
+This keeps your repository:
+
+✔ Fast
+✔ Small
+✔ Easy to clone/pull
+✔ Within GitHub’s 100 MB limit
+
+🚀 Step 1 — Install Git LFS
+Windows
+choco install git-lfs
+macOS
+brew install git-lfs
+Linux
+sudo apt install git-lfs
+🚀 Step 2 — Enable Git LFS in your repo
+Run this inside your repository:
+
+git lfs install
+🚀 Step 3 — Choose which files should use LFS
+For example:
+
+Images
+git lfs track "*.jpg"
+git lfs track "*.png"
+git lfs track "*.jpeg"
+Videos
+git lfs track "*.mp4"
+Binaries
+git lfs track "*.zip"
+git lfs track "*.exe"
+git lfs track "*.psd"
+Git LFS will automatically update .gitattributes file.
+Add it to Git:
+
+git add .gitattributes
+🚀 Step 4 — Add your large files
+Example:
+
+git add images/*
+git commit -m "Add images using Git LFS"
+git push
+GitHub/GitLab/Bitbucket will now store these files in LFS.
+
+🔍 Verify LFS is working
+Run:
+
+git lfs ls-files
+You should see your large files listed.
+
+🧹 If your repo already contains large files
+If you already committed large files earlier (not tracked by LFS), use a cleaner:
+
+Option A – Recommended
+git lfs migrate import --include="*.jpg,*.png,*.mp4"
+Option B – Clean full history
+git lfs migrate import --everything --include="*.zip,*.mp4"
+⚠️ This rewrites history → You must force push:
+
+git push --force
+📌 GitHub LFS Storage Limits
+Plan	Free LFS storage	Free LFS bandwidth
+Free	1 GB	1 GB/month
+Paid packs	+50 GB storage	+50 GB bandwidth
+Want me to convert your existing repo to LFS?
+Just tell me:
+
+Repo name
+
+Which file types to track (jpg/png/mp4/zip/etc.)
+
+Whether full history rewrite is okay
+
+I’ll generate the exact commands for your repo.
+
+You said:
+cost paid pack
+ChatGPT said:
+Good question. The cost for paid add-ons for Git Large File Storage (LFS) on GitHub depends on how much storage and bandwidth you consume beyond the free quota. 
+GitHub Docs
++2
+GitHub
++2
+
+💡 What you get for free
+For a standard (Free/Pro) account: 10 GiB storage + 10 GiB bandwidth per month free. 
+GitHub Docs
++1
+
+For team/enterprise-type accounts: higher free quota — e.g. 250 GiB storage + 250 GiB bandwidth per month. 
+GitHub Docs
++1
+
+💲 What if you exceed the limit
+Under the current metered pricing model (for enterprise-style accounts or overages) LFS costs approximately: 
+The GitHub Blog
++2
+GitHub
++2
+
+Storage (beyond free allowance): ~$0.07 USD per GiB per month 
+The GitHub Blog
++1
+
+Download bandwidth/egress: ~$0.0875 USD per GiB 
+The GitHub Blog
++1
+
+Example
+If you store an extra 5 GiB beyond free quota and keep it through the month → ~5 × $0.07 = $0.35/month.
+If someone downloads 20 GiB of files in a month → ~20 × $0.0875 = $1.75.
+
+If you tell me your likely usage (e.g. how many GB of saree images you expect), I can roughly estimate your monthly cost using LFS — that way you can see if it's worth paying or maybe consider alternate storage (e.g. cloud bucket + pointer references).
+
+You said:
+inr
+ChatGPT said:
+Here is the GitHub LFS paid pricing converted into INR 🇮🇳 (approx. using ₹84 = $1 USD).
+
+💰 GitHub LFS Pricing (INR)
+1. Storage cost
+GitHub charges:
+$0.07 per GB per month
+
+Converted to INR:
+
+👉 ₹0.07 × 84 = ₹5.9 per GB per month
+Rounded:
+
+✅ ₹6 per GB per month
+2. Bandwidth (download) cost
+GitHub charges:
+$0.0875 per GB downloaded
+
+Converted to INR:
+
+👉 0.0875 × 84 = ₹7.35 per GB downloaded
+Rounded:
+
+✅ ₹7.5 per GB download
+📌 Summary (in INR)
+Item	Cost
+LFS Storage	₹6 per GB per month
+LFS Download Bandwidth	₹7.5 per GB
+Free quota	10 GB storage + 10 GB download/month
+💡 Example: Your Possible Monthly Cost
+If your resale saree website stores 2 GB of images:
+
+Storage → 2 GB × ₹6 = ₹12/month
+
+Downloads?
+Suppose buyers download 5 GB total → 5 × ₹7.5 = ₹37.5/month
+
+Total: ~ ₹49–₹50 per month
+Very cheap.
+
+⭐ Want Zero-Cost Storage?
+Instead of LFS, you can store images in:
+
+✅ Google Drive (public links)
+✅ Cloudflare R2 (free tier)
+✅ Firebase Storage
+✅ GitHub Pages + image compression
+➡ Ultra-cheap or even free
+
+If you want, I can set up the saree web app to load images from Drive / Firebase instead of LFS.
+
+You said:
+inplement Google Drive  pic logic
+ChatGPT said:
+
+Thought for 9s
+Nice, this will make your hosting super cheap 😄
+Let’s wire Google Drive images into your Tej Shree Collection page.
+
+Step 1: Upload saree photos to Google Drive
+For each saree:
+
+Go to drive.google.com
+
+Click New → File upload → upload your saree JPG/PNG.
+
+After upload, right-click → Share
+
+Change to “Anyone with the link – Viewer”.
+
+Click Copy link – you’ll get something like:
+
+https://drive.google.com/file/d/1AbCdEfGhIjKlMnOpQrStUvWxYz123456/view?usp=sharing
+From this link, note the FILE_ID part:
+
+Here, FILE_ID = 1AbCdEfGhIjKlMnOpQrStUvWxYz123456
+
+Build a direct image URL like this:
+
+https://drive.google.com/uc?export=view&id=FILE_ID
+Example:
+
+https://drive.google.com/uc?export=view&id=1AbCdEfGhIjKlMnOpQrStUvWxYz123456
+We’ll store this URL in imageUrl for each saree.
+
+Step 2: Use Google Drive URLs in your code
+Here is your updated index.html with Drive image logic added.
+
+👉 You only need to replace the imageUrl placeholders with your real Drive URLs.
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tej Shree Collection – Resale Sarees</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --primary: #b6204d;
+      --primary-soft: #ffe6ef;
+      --bg: #faf5f7;
+      --text: #333;
+      --card-bg: #fff;
+      --border: #e4d4da;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --shadow-soft: 0 8px 18px rgba(0,0,0,0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .app-shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 12px 16px 32px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 18px;
+      margin-bottom: 16px;
+      background: var(--card-bg);
+      border-radius: 999px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border);
+      position: sticky;
+      top: 8px;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+
+    header .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-round {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffeef4, #b6204d);
+    }
+
+    header h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    header span.tagline {
+      font-size: 0.75rem;
+      color: #777;
+    }
+
+    header .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f5f2f3;
+      color: var(--text);
+      transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 10px rgba(182, 32, 77, 0.35);
+    }
+
+    .btn-outline {
+      border-color: var(--border);
+      background: #fff;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 0.7rem;
+      color: #555;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 850px) {
+      header {
+        flex-wrap: wrap;
+        border-radius: 18px;
+        align-items: flex-start;
+      }
+      main {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .products-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, var(--primary-soft), #fff);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .hero-copy {
+      max-width: 420px;
+    }
+
+    .hero-copy h2 {
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+    }
+
+    .hero-copy p {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .stats {
+      font-size: 0.75rem;
+      color: #555;
+    }
+
+    .filters-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      align-items: flex-end;
+    }
+
+    .filters-card h3 {
+      font-size: 0.9rem;
+      flex-basis: 100%;
+      margin-bottom: 2px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 120px;
+    }
+
+    .field label {
+      font-size: 0.75rem;
+      color: #666;
+    }
+
+    .field select,
+    .field input {
+      padding: 6px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+      background: #fff;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(182, 32, 77, 0.2);
+    }
+
+    .products-grid {
+      margin-top: 4px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.04);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.07);
+    }
+
+    .card-img {
+      position: relative;
+      padding-top: 70%;
+      background: radial-gradient(circle at 30% 20%, #ffeef5, #f0d0dd);
+      overflow: hidden;
+    }
+
+    /* Show Google Drive image */
+    .card-img img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-img span.badge {
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      background: rgba(255,255,255,0.9);
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      border: 1px solid var(--border);
+    }
+
+    .card-body {
+      padding: 8px 10px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .card-meta {
+      font-size: 0.75rem;
+      color: #666;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .card-price-row {
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .price {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--primary);
+    }
+
+    .price small {
+      font-weight: 400;
+      font-size: 0.7rem;
+      color: #777;
+    }
+
+    .card-tags {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .card-tag {
+      font-size: 0.65rem;
+      padding: 3px 6px;
+      border-radius: 999px;
+      background: #f6f1f3;
+      color: #6c4854;
+    }
+
+    .empty-state {
+      font-size: 0.85rem;
+      color: #777;
+      padding: 8px;
+    }
+
+    .side-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .panel-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .panel-card h3 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .panel-card p {
+      font-size: 0.8rem;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .steps-list {
+      list-style: none;
+      padding-left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 0.78rem;
+      color: #555;
+    }
+
+    .steps-list li::before {
+      content: "•";
+      color: var(--primary);
+      display: inline-block;
+      width: 12px;
+      margin-left: -2px;
+    }
+
+    footer {
+      margin-top: 20px;
+      font-size: 0.75rem;
+      text-align: center;
+      color: #999;
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header>
+      <div class="logo-area">
+        <div class="logo-round"></div>
+        <div>
+          <h1>Tej Shree Collection</h1>
+          <span class="tagline">Pre-loved sarees, new stories ✨</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <span class="pill">Resale sarees • WhatsApp to buy</span>
+        <button class="btn btn-primary" id="scrollToShopBtn">Browse collection</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- LEFT: PRODUCTS -->
+      <section class="products-panel">
+        <div class="hero-card">
+          <div class="hero-copy">
+            <h2>Handpicked resale sarees</h2>
+            <p>Explore beautiful pre-loved sarees from Tej Shree Collection and contact directly on WhatsApp for booking.</p>
+            <div class="hero-meta">
+              <span class="stats">⭐ Curated pieces</span>
+              <span class="stats">📍 Based in Chennai</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- FILTERS -->
+        <section class="filters-card" id="shop">
+          <h3>Filter sarees</h3>
+          <div class="field">
+            <label for="fabricFilter">Fabric</label>
+            <select id="fabricFilter">
+              <option value="">All fabrics</option>
+              <option value="Silk">Silk</option>
+              <option value="Cotton">Cotton</option>
+              <option value="Linen">Linen</option>
+              <option value="Georgette">Georgette</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="conditionFilter">Condition</label>
+            <select id="conditionFilter">
+              <option value="">Any</option>
+              <option value="Like New">Like New</option>
+              <option value="Gently Used">Gently Used</option>
+              <option value="Vintage">Vintage</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="maxPriceFilter">Max Price (₹)</label>
+            <input type="number" id="maxPriceFilter" placeholder="e.g. 2500" min="0" />
+          </div>
+          <button class="btn" id="clearFiltersBtn">Clear</button>
+        </section>
+
+        <!-- PRODUCTS GRID -->
+        <section class="products-grid" id="productsGrid">
+          <!-- Cards inserted by JS -->
+        </section>
+        <div class="empty-state" id="emptyState" style="display:none;">
+          No sarees match these filters. Try changing fabric, condition or price.
+        </div>
+      </section>
+
+      <!-- RIGHT: INFO PANEL -->
+      <aside class="side-panel">
+        <section class="panel-card">
+          <h3>How to buy</h3>
+          <p>Like a saree? Open it in WhatsApp and message Tej Shree Collection directly.</p>
+          <ul class="steps-list">
+            <li>Browse the collection on the left.</li>
+            <li>Click the <strong>WhatsApp</strong> button on any saree.</li>
+            <li>Share your size, city and any questions.</li>
+            <li>Confirm payment & delivery details with Tej Shree Collection.</li>
+          </ul>
+        </section>
+      </aside>
+    </main>
+
+    <footer>
+      © <span id="yearSpan"></span> Tej Shree Collection • Resale saree showcase.
+    </footer>
+  </div>
+
+  <script>
+    // --- DEMO DATA: Sample sarees ---
+    // imageUrl points to Google Drive direct links
+    const sarees = [
+      {
+        id: 1,
+        title: "Maroon Kanchivaram Silk Saree",
+        fabric: "Silk",
+        condition: "Like New",
+        price: 5200,
+        city: "Chennai",
+        blouse: "Unstitched",
+        tagLine: "Wedding / reception perfect",
+        whatsapp: "919884191310",
+        imageUrl: "https://drive.google.com/file/d/1YmRyVGJ_K5IDyP2D8xjcxRBaniEBn2aF/view?usp=drive_link"
+      },
+      {
+        id: 2,
+        title: "Peach Soft Silk with Silver Zari",
+        fabric: "Silk",
+        condition: "Gently Used",
+        price: 3200,
+        city: "Chennai",
+        blouse: "Stitched 36",
+        tagLine: "One-time worn",
+        whatsapp: "919884191310",
+        imageUrl: "https://drive.google.com/file/d/1WAt5xVTXs-Pb5dX659b5UbjW4CiDNtye/view?usp=drive_link"
+      },
+      {
+        id: 3,
+        title: "Handloom Cotton Saree – Indigo",
+        fabric: "Cotton",
+        condition: "Gently Used",
+        price: 1600,
+        city: "Chennai",
+        blouse: "No blouse",
+        tagLine: "Office / daily wear",
+        whatsapp: "919884191310",
+        imageUrl: "https://drive.google.com/file/d/1WOdcybzUdnU8xIGH1ndlyZ2bkWWB3q6-/view?usp=drive_link"
+      },
+      {
+        id: 4,
+        title: "Linen Floral Printed Saree",
+        fabric: "Linen",
+        condition: "Like New",
+        price: 2100,
+        city: "Chennai",
+        blouse: "Running blouse",
+        tagLine: "Brunch / casual outings",
+        whatsapp: "919884191310",
+        imageUrl: "https://drive.google.com/uc?export=view&id=YOUR_DRIVE_FILE_ID_4"
+      },
+      {
+        id: 5,
+        title: "Green Georgette Partywear Saree",
+        fabric: "Georgette",
+        condition: "Vintage",
+        price: 1200,
+        city: "Chennai",
+        blouse: "Stitched 38",
+        tagLine: "Lightweight & flowy",
+        whatsapp: "919884191310",
+        imageUrl: "https://drive.google.com/uc?export=view&id=YOUR_DRIVE_FILE_ID_5"
+      }
+    ];
+
+    const productsGrid = document.getElementById("productsGrid");
+    const emptyState = document.getElementById("emptyState");
+
+    const fabricFilter = document.getElementById("fabricFilter");
+    const conditionFilter = document.getElementById("conditionFilter");
+    const maxPriceFilter = document.getElementById("maxPriceFilter");
+    const clearFiltersBtn = document.getElementById("clearFiltersBtn");
+
+    function renderSarees(list) {
+      productsGrid.innerHTML = "";
+
+      if (!list.length) {
+        emptyState.style.display = "block";
+        return;
+      }
+      emptyState.style.display = "none";
+
+      list.forEach((s) => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="card-img">
+            <span class="badge">${s.condition}</span>
+            ${s.imageUrl ? `<img src="${s.imageUrl}" alt="${s.title}" />` : ""}
+          </div>
+          <div class="card-body">
+            <div class="card-title">${s.title}</div>
+            <div class="card-meta">
+              <span>${s.fabric}</span>
+              <span>Blouse: ${s.blouse}</span>
+              <span>${s.city}</span>
+            </div>
+            <div class="card-tags">
+              <span class="card-tag">${s.tagLine}</span>
+            </div>
+            <div class="card-price-row">
+              <div class="price">₹${s.price.toLocaleString("en-IN")} <small>+ shipping</small></div>
+              <button class="btn btn-outline btn-sm" data-id="${s.id}">WhatsApp</button>
+            </div>
+          </div>
+        `;
+        productsGrid.appendChild(card);
+      });
+
+      // Attach WhatsApp click handlers
+      document.querySelectorAll(".card button[data-id]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = parseInt(btn.getAttribute("data-id"), 10);
+          const saree = sarees.find((x) => x.id === id);
+          if (!saree) return;
+          const msg =
+            `Hi Tej Shree Collection, I'm interested in this saree:\n\n` +
+            `*${saree.title}*\n` +
+            `Fabric: ${saree.fabric}\n` +
+            `Condition: ${saree.condition}\n` +
+            `Price: ₹${saree.price.toLocaleString("en-IN")}\n` +
+            `City: ${saree.city}\n\n` +
+            `Is it still available?`;
+          const encoded = encodeURIComponent(msg);
+          const url = `https://wa.me/${saree.whatsapp}?text=${encoded}`;
+          window.open(url, "_blank");
+        });
+      });
+    }
+
+    function applyFilters() {
+      const fabricVal = fabricFilter.value;
+      const conditionVal = conditionFilter.value;
+      const maxPriceVal = maxPriceFilter.value ? Number(maxPriceFilter.value) : null;
+
+      const filtered = sarees.filter((s) => {
+        if (fabricVal && s.fabric !== fabricVal) return false;
+        if (conditionVal && s.condition !== conditionVal) return false;
+        if (maxPriceVal !== null && s.price > maxPriceVal) return false;
+        return true;
+      });
+
+      renderSarees(filtered);
+    }
+
+    fabricFilter.addEventListener("change", applyFilters);
+    conditionFilter.addEventListener("change", applyFilters);
+    maxPriceFilter.addEventListener("input", applyFilters);
+    clearFiltersBtn.addEventListener("click", () => {
+      fabricFilter.value = "";
+      conditionFilter.value = "";
+      maxPriceFilter.value = "";
+      applyFilters();
+    });
+
+    function scrollToElement(el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
 
     document.getElementById("scrollToShopBtn").addEventListener("click", () => {
       scrollToElement(document.getElementById("shop"));
