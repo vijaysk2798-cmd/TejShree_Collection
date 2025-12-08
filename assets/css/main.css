@@ -116,8 +116,9 @@ header .header-actions {
 }
 
 .btn-outline {
-  border-color: rgba(255, 255, 255, 0.7);
-  background: transparent;
+  border-color: var(--primary);
+  color: var(--primary);
+  background: #fff;
 }
 
 .btn:hover {
@@ -128,6 +129,13 @@ header .header-actions {
 .btn:active {
   transform: translateY(0);
   box-shadow: none;
+}
+
+/* small variant for card button */
+.btn-sm,
+.card .btn.btn-sm {
+  padding: 6px 10px;
+  font-size: 0.78rem;
 }
 
 .pill {
@@ -425,4 +433,18 @@ footer {
   font-size: 0.75rem;
   text-align: center;
   color: #8a7464;
+}
+
+/* Mobile tweak: button full-width in card */
+@media (max-width: 480px) {
+  .card-price-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .card-price-row .btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
