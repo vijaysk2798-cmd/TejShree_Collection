@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>PS Silks Kanchipuram – a digital shopping</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- CSS path you showed in screenshot -->
   <link rel="stylesheet" href="./assets/css/main.css" />
 </head>
 <body>
@@ -103,73 +102,44 @@
   </div>
 
   <script>
-    // --- DATA: Sarees (using your Google Drive image URL for now) ---
-    // You can give different imageUrl per saree later.
-    const IMAGE_URL =
-      "https://drive.google.com/uc?export=view&id=1tHuPE55R0f1uh3XZscr-2ISdlpd-CRwE";
+    let sarees = [];
 
-    const sarees = [
-      {
-        id: 1,
-        title: "Maroon Kanchipuram Silk Saree with Zari Border",
-        fabric: "Silk",
-        condition: "Like New",
-        price: 5200,
-        city: "Kanchipuram",
-        blouse: "Unstitched running blouse",
-        tagLine: "Traditional temple border",
-        whatsapp: "919884191310",
-        imageUrl: IMAGE_URL
-      },
-      {
-        id: 2,
-        title: "Peach Soft Silk with Silver Zari",
-        fabric: "Silk",
-        condition: "Gently Used",
-        price: 3200,
-        city: "Kanchipuram",
-        blouse: "Stitched 36",
-        tagLine: "Light bridal / reception wear",
-        whatsapp: "919884191310",
-        imageUrl: IMAGE_URL
-      },
-      {
-        id: 3,
-        title: "Handloom Cotton Saree – Indigo Checks",
-        fabric: "Cotton",
-        condition: "Gently Used",
-        price: 1600,
-        city: "Kanchipuram",
-        blouse: "No blouse",
-        tagLine: "Office & temple wear",
-        whatsapp: "919884191310",
-        imageUrl: IMAGE_URL
-      },
-      {
-        id: 4,
-        title: "Linen Floral Printed Saree",
-        fabric: "Linen",
-        condition: "Like New",
-        price: 2100,
-        city: "Kanchipuram",
-        blouse: "Running blouse",
-        tagLine: "Brunch & casual outing",
-        whatsapp: "919884191310",
-        imageUrl: IMAGE_URL
-      },
-      {
-        id: 5,
-        title: "Bottle Green Georgette Partywear Saree",
-        fabric: "Georgette",
-        condition: "Vintage",
-        price: 1200,
-        city: "Kanchipuram",
-        blouse: "Stitched 38",
-        tagLine: "Lightweight party drape",
-        whatsapp: "919884191310",
-        imageUrl: IMAGE_URL
+    async function loadSareesFromCsv() {
+      const response = await fetch("./assets/data/sarees.csv?v=" + Date.now());
+      if (!response.ok) {
+        throw new Error("Failed to load sarees.csv");
       }
-    ];
+      const text = await response.text();
+
+      const lines = text.trim().split(/\r?\n/);
+      if (lines.length <= 1) return [];
+
+      const [headerLine, ...rows] = lines;
+      const headers = headerLine.split(",").map((h) => h.trim());
+
+      return rows
+        .filter((r) => r.trim().length > 0)
+        .map((row, rowIndex) => {
+          const cols = row.split(",");
+          const raw = {};
+          headers.forEach((h, i) => {
+            raw[h] = (cols[i] || "").trim();
+          });
+
+          return {
+            id: raw.id || rowIndex + 1,
+            title: raw.title || "",
+            fabric: raw.fabric || "",
+            condition: raw.condition || "",
+            price: Number(raw.price || 0),
+            city: raw.city || "Kanchipuram",
+            blouse: raw.blouse || "",
+            tagLine: raw.tagLine || "",
+            whatsapp: raw.whatsapp || "919884191310",
+            imageUrl: raw.imageUrl || ""
+          };
+        });
+    }
 
     const productsGrid = document.getElementById("productsGrid");
     const emptyState = document.getElementById("emptyState");
@@ -193,7 +163,7 @@
         card.className = "card";
         card.innerHTML = `
           <div class="card-img">
-            <span class="badge">${s.condition}</span>
+            <span class="badge">${s.condition || ""}</span>
             ${s.imageUrl ? `<img src="${s.imageUrl}" alt="${s.title}" />` : ""}
           </div>
           <div class="card-body">
@@ -204,7 +174,7 @@
               <span>${s.city}</span>
             </div>
             <div class="card-tags">
-              <span class="card-tag">${s.tagLine}</span>
+              ${s.tagLine ? `<span class="card-tag">${s.tagLine}</span>` : ""}
             </div>
             <div class="card-price-row">
               <div class="price">
@@ -223,8 +193,8 @@
       // WhatsApp click handlers
       document.querySelectorAll(".card button[data-id]").forEach((btn) => {
         btn.addEventListener("click", () => {
-          const id = parseInt(btn.getAttribute("data-id"), 10);
-          const saree = sarees.find((x) => x.id === id);
+          const id = btn.getAttribute("data-id");
+          const saree = sarees.find((x) => String(x.id) === String(id));
           if (!saree) return;
 
           const msg =
@@ -280,8 +250,18 @@
         scrollToElement(document.getElementById("shop"));
       });
 
-    // Init
-    renderSarees(sarees);
+    // Init – load CSV then render
+    loadSareesFromCsv()
+      .then((list) => {
+        sarees = list;
+        renderSarees(sarees);
+      })
+      .catch((err) => {
+        console.error(err);
+        emptyState.textContent = "Could not load sarees list. Please try later.";
+        emptyState.style.display = "block";
+      });
+
     document.getElementById("yearSpan").textContent =
       new Date().getFullYear();
   </script>
