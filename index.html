@@ -5,6 +5,33 @@
   <title>PS Silks Kanchipuram – a digital shopping</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="./assets/css/main.css" />
+  <style>
+    /* Quick thumbnail styling for multiple images */
+    .card-main-img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .card-thumbs {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+    .card-thumbs .thumb-img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      cursor: pointer;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      transition: 0.2s;
+    }
+    .card-thumbs .thumb-img:hover {
+      border-color: #007bff;
+    }
+  </style>
 </head>
 <body>
   <div class="app-shell">
@@ -16,7 +43,6 @@
           <span class="tagline">a digital shopping</span>
         </div>
       </div>
-
       <div class="header-actions">
         <span class="pill">Kanchipuram silks • WhatsApp to buy</span>
         <button class="btn btn-primary" id="scrollToShopBtn">Browse collection</button>
@@ -29,9 +55,7 @@
         <div class="hero-card">
           <div class="hero-copy">
             <h2>Handpicked Kanchipuram & soft silk sarees</h2>
-            <p>
-              Explore curated pre-loved & surplus sarees from PS Silks Kanchipuram and book easily on WhatsApp.
-            </p>
+            <p>Explore curated pre-loved & surplus sarees from PS Silks Kanchipuram and book easily on WhatsApp.</p>
             <div class="hero-meta">
               <span class="stats">⭐ Temple-town originals</span>
               <span class="stats">📍 Based in Kanchipuram</span>
@@ -42,7 +66,6 @@
         <!-- FILTERS -->
         <section class="filters-card" id="shop">
           <h3>Filter sarees</h3>
-
           <div class="field">
             <label for="fabricFilter">Fabric</label>
             <select id="fabricFilter">
@@ -54,7 +77,6 @@
               <option value="Other">Other</option>
             </select>
           </div>
-
           <div class="field">
             <label for="conditionFilter">Condition</label>
             <select id="conditionFilter">
@@ -64,12 +86,10 @@
               <option value="Vintage">Vintage</option>
             </select>
           </div>
-
           <div class="field">
             <label for="maxPriceFilter">Max Price (₹)</label>
             <input type="number" id="maxPriceFilter" placeholder="e.g. 2500" min="0" />
           </div>
-
           <button class="btn" id="clearFiltersBtn">Clear</button>
         </section>
 
@@ -106,39 +126,33 @@
 
     async function loadSareesFromCsv() {
       const response = await fetch("./assets/data/sarees.csv?v=" + Date.now());
-      if (!response.ok) {
-        throw new Error("Failed to load sarees.csv");
-      }
+      if (!response.ok) throw new Error("Failed to load sarees.csv");
       const text = await response.text();
 
       const lines = text.trim().split(/\r?\n/);
       if (lines.length <= 1) return [];
 
       const [headerLine, ...rows] = lines;
-      const headers = headerLine.split(",").map((h) => h.trim());
+      const headers = headerLine.split(",").map(h => h.trim());
 
-      return rows
-        .filter((r) => r.trim().length > 0)
-        .map((row, rowIndex) => {
-          const cols = row.split(",");
-          const raw = {};
-          headers.forEach((h, i) => {
-            raw[h] = (cols[i] || "").trim();
-          });
+      return rows.filter(r => r.trim().length > 0).map((row, idx) => {
+        const cols = row.split(",");
+        const raw = {};
+        headers.forEach((h,i) => { raw[h] = (cols[i]||"").trim(); });
 
-          return {
-            id: raw.id || rowIndex + 1,
-            title: raw.title || "",
-            fabric: raw.fabric || "",
-            condition: raw.condition || "",
-            price: Number(raw.price || 0),
-            city: raw.city || "Kanchipuram",
-            blouse: raw.blouse || "",
-            tagLine: raw.tagLine || "",
-            whatsapp: raw.whatsapp || "919884191310",
-            imageUrl: raw.imageUrl || ""
-          };
-        });
+        return {
+          id: raw.id || idx + 1,
+          title: raw.title || "",
+          fabric: raw.fabric || "",
+          condition: raw.condition || "",
+          price: Number(raw.price || 0),
+          city: raw.city || "Kanchipuram",
+          blouse: raw.blouse || "",
+          tagLine: raw.tagLine || "",
+          whatsapp: raw.whatsapp || "919884191310",
+          images: (raw.images || "").split("|") // support multiple images
+        };
+      });
     }
 
     const productsGrid = document.getElementById("productsGrid");
@@ -151,82 +165,84 @@
 
     function renderSarees(list) {
       productsGrid.innerHTML = "";
-
       if (!list.length) {
         emptyState.style.display = "block";
         return;
       }
       emptyState.style.display = "none";
 
-      list.forEach((s) => {
+      list.forEach(s => {
         const card = document.createElement("article");
         card.className = "card";
-        card.innerHTML = `
-          <div class="card-img">
-            <span class="badge">${s.condition || ""}</span>
-            ${s.imageUrl ? `<img src="${s.imageUrl}" alt="${s.title}" />` : ""}
+
+        // main image
+        const mainImg = document.createElement("img");
+        mainImg.src = s.images[0] ? `assets/images/${s.images[0]}` : "";
+        mainImg.alt = s.title;
+        mainImg.className = "card-main-img";
+
+        // thumbnails
+        const thumbs = document.createElement("div");
+        thumbs.className = "card-thumbs";
+        s.images.forEach(img => {
+          if (!img) return;
+          const t = document.createElement("img");
+          t.src = `assets/images/${img}`;
+          t.alt = s.title;
+          t.className = "thumb-img";
+          t.addEventListener("click", () => mainImg.src = t.src);
+          thumbs.appendChild(t);
+        });
+
+        const cardBody = document.createElement("div");
+        cardBody.className = "card-body";
+        cardBody.innerHTML = `
+          <div class="card-title">${s.title}</div>
+          <div class="card-meta">
+            <span>${s.fabric}</span>
+            <span>Blouse: ${s.blouse}</span>
+            <span>${s.city}</span>
           </div>
-          <div class="card-body">
-            <div class="card-title">${s.title}</div>
-            <div class="card-meta">
-              <span>${s.fabric}</span>
-              <span>Blouse: ${s.blouse}</span>
-              <span>${s.city}</span>
-            </div>
-            <div class="card-tags">
-              ${s.tagLine ? `<span class="card-tag">${s.tagLine}</span>` : ""}
-            </div>
-            <div class="card-price-row">
-              <div class="price">
-                ₹${s.price.toLocaleString("en-IN")}
-                <small>+ shipping</small>
-              </div>
-              <button class="btn btn-outline btn-sm" data-id="${s.id}">
-                WhatsApp
-              </button>
-            </div>
+          <div class="card-tags">
+            ${s.tagLine ? `<span class="card-tag">${s.tagLine}</span>` : ""}
+          </div>
+          <div class="card-price-row">
+            <div class="price">₹${s.price.toLocaleString("en-IN")} <small>+ shipping</small></div>
+            <button class="btn btn-outline btn-sm" data-id="${s.id}">WhatsApp</button>
           </div>
         `;
+
+        card.appendChild(mainImg);
+        if (s.images.length > 1) card.appendChild(thumbs);
+        card.appendChild(cardBody);
         productsGrid.appendChild(card);
       });
 
-      // WhatsApp click handlers
-      document.querySelectorAll(".card button[data-id]").forEach((btn) => {
+      // WhatsApp button click
+      document.querySelectorAll(".card button[data-id]").forEach(btn => {
         btn.addEventListener("click", () => {
           const id = btn.getAttribute("data-id");
-          const saree = sarees.find((x) => String(x.id) === String(id));
+          const saree = sarees.find(x => String(x.id) === String(id));
           if (!saree) return;
 
-          const msg =
-            `Hi PS Silks Kanchipuram, I'm interested in this saree:\n\n` +
-            `*${saree.title}*\n` +
-            `Fabric: ${saree.fabric}\n` +
-            `Condition: ${saree.condition}\n` +
-            `Price: ₹${saree.price.toLocaleString("en-IN")}\n` +
-            `City: ${saree.city}\n\n` +
-            `Is it still available?`;
-
+          const msg = `Hi PS Silks Kanchipuram, I'm interested in this saree:\n\n*${saree.title}*\nFabric: ${saree.fabric}\nCondition: ${saree.condition}\nPrice: ₹${saree.price.toLocaleString("en-IN")}\nCity: ${saree.city}\n\nIs it still available?`;
           const encoded = encodeURIComponent(msg);
-          const url = `https://wa.me/${saree.whatsapp}?text=${encoded}`;
-          window.open(url, "_blank");
+          window.open(`https://wa.me/${saree.whatsapp}?text=${encoded}`, "_blank");
         });
       });
     }
 
     function applyFilters() {
-      const fabricVal = fabricFilter.value;
-      const conditionVal = conditionFilter.value;
-      const maxPriceVal = maxPriceFilter.value
-        ? Number(maxPriceFilter.value)
-        : null;
+      const f = fabricFilter.value;
+      const c = conditionFilter.value;
+      const p = maxPriceFilter.value ? Number(maxPriceFilter.value) : null;
 
-      const filtered = sarees.filter((s) => {
-        if (fabricVal && s.fabric !== fabricVal) return false;
-        if (conditionVal && s.condition !== conditionVal) return false;
-        if (maxPriceVal !== null && s.price > maxPriceVal) return false;
+      const filtered = sarees.filter(s => {
+        if (f && s.fabric !== f) return false;
+        if (c && s.condition !== c) return false;
+        if (p !== null && s.price > p) return false;
         return true;
       });
-
       renderSarees(filtered);
     }
 
@@ -240,30 +256,20 @@
       applyFilters();
     });
 
-    function scrollToElement(el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    document.getElementById("scrollToShopBtn").addEventListener("click", () => {
+      document.getElementById("shop").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
 
-    document
-      .getElementById("scrollToShopBtn")
-      .addEventListener("click", () => {
-        scrollToElement(document.getElementById("shop"));
-      });
+    loadSareesFromCsv().then(list => {
+      sarees = list;
+      renderSarees(sarees);
+    }).catch(err => {
+      console.error(err);
+      emptyState.textContent = "Could not load sarees list. Please try later.";
+      emptyState.style.display = "block";
+    });
 
-    // Init – load CSV then render
-    loadSareesFromCsv()
-      .then((list) => {
-        sarees = list;
-        renderSarees(sarees);
-      })
-      .catch((err) => {
-        console.error(err);
-        emptyState.textContent = "Could not load sarees list. Please try later.";
-        emptyState.style.display = "block";
-      });
-
-    document.getElementById("yearSpan").textContent =
-      new Date().getFullYear();
+    document.getElementById("yearSpan").textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
